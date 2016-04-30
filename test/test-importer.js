@@ -3,7 +3,7 @@
 
 const Importer = require('./../src').importer
 const expect = require('chai').expect
-const BlockService = require('ipfs-blocks').BlockService
+const BlockService = require('ipfs-block-service')
 const DAGService = require('ipfs-merkle-dag').DAGService
 // const DAGNode = require('ipfs-merkle-dag').DAGNode
 const bs58 = require('bs58')
