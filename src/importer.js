@@ -238,13 +238,15 @@ function Importer (dagService, options) {
       // If the value is not an object
       //   add as a link to the dirNode
 
-      function traverse (tree, base) {
+      let pendingWrites = 0
+
+      function traverse (tree, path, done) {
         const keys = Object.keys(tree)
         let tmpTree = tree
         keys.map((key) => {
           if (typeof tmpTree[key] === 'object' &&
               !Buffer.isBuffer(tmpTree[key])) {
-            tmpTree[key] = traverse.call(this, tmpTree[key], base ? base + '/' + key : key)
+            tmpTree[key] = traverse.call(this, tmpTree[key], path ? path + '/' + key : key, done)
           }
         })
 
@@ -264,28 +266,39 @@ function Importer (dagService, options) {
         })
 
         n.data = d.marshal()
+
+        pendingWrites++
         dagService.add(n, (err) => {
+          pendingWrites--
           if (err) {
             this.push({error: 'failed to store dirNode'})
+          } else if (path) {
+            const el = {
+              path: path,
+              multihash: n.multihash(),
+              yes: 'no',
+              size: n.size()
+            }
+            this.push(el)
+          }
+
+          if (pendingWrites <= 0) {
+            done()
           }
         })
 
-        if (!base) {
+        if (!path) {
           return
         }
-
-        const el = {
-          path: base,
-          multihash: n.multihash(),
-          size: n.size()
-        }
-        this.push(el)
 
         mhIndex[bs58.encode(n.multihash())] = { size: n.size() }
         return n.multihash()
       }
-      /* const rootHash = */ traverse.call(this, fileTree)
-      this.push(null)
+
+      let self = this
+      /* const rootHash = */ traverse.call(this, fileTree, null, function () {
+        self.push(null)
+      })
     }
   }
 }
