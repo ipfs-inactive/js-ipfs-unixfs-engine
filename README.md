@@ -156,7 +156,6 @@ form
 
 by the multihash of the file from the DAG Service.
 
-
 ## Install
 
 With [npm](https://npmjs.org/) installed, run
