@@ -12,7 +12,12 @@ const dirExporter = require('./dir')
 const fileExporter = require('./file')
 
 module.exports = (hash, ipldResolver, options) => {
-  hash = cleanMultihash(hash)
+  try {
+    hash = cleanMultihash(hash)
+  } catch (err) {
+    return pull.error(err)
+  }
+
   options = options || {}
 
   function visitor (item) {

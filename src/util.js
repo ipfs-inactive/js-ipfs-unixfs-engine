@@ -4,6 +4,7 @@ const UnixFS = require('ipfs-unixfs')
 const pull = require('pull-stream')
 const mh = require('multihashes')
 const isIPFS = require('is-ipfs')
+const parallel = require('async/parallel')
 
 exports.switchType = (node, dirHandler, fileHandler) => {
   const data = UnixFS.unmarshal(node.data)
@@ -25,4 +26,11 @@ exports.cleanMultihash = (multihash) => {
   }
 
   return multihash
+}
+
+exports.getSizeAndHash = (n, cb) => {
+  parallel({
+    multihash: (cb) => n.multihash(cb),
+    size: (cb) => n.size(cb)
+  }, cb)
 }

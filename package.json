@@ -2,7 +2,7 @@
   "name": "ipfs-unixfs-engine",
   "version": "0.12.0",
   "description": "JavaScript implementation of the unixfs Engine used by IPFS",
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "jsnext:main": "src/index.js",
   "scripts": {
     "lint": "aegir-lint",
@@ -45,10 +45,10 @@
     "pre-commit": "^1.1.3",
     "pull-zip": "^2.0.1",
     "raw-loader": "^0.5.1",
-    "rimraf": "^2.5.4",
-    "run-series": "^1.1.4"
+    "rimraf": "^2.5.4"
   },
   "dependencies": {
+    "async": "^2.0.1",
     "cids": "^0.2.0",
     "ipfs-unixfs": "^0.1.4",
     "ipld-dag-pb": "^0.1.3",
@@ -61,7 +61,6 @@
     "pull-stream": "^3.4.5",
     "pull-traverse": "^1.0.3",
     "pull-write": "^1.1.1",
-    "run-parallel": "^1.1.6"
   },
   "contributors": [
     "David Dias <daviddias.p@gmail.com>",
