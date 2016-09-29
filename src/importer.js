@@ -28,9 +28,14 @@ module.exports = (dagService, options) => {
     null,
     100,
     (err) => {
-      if (err) return source.end(err)
+      if (err) {
+        return source.end(err)
+      }
 
-      createAndStoreTree(files, dagService, source, () => {
+      createAndStoreTree(files, dagService, source, (err) => {
+        if (err) {
+          return source.end(err)
+        }
         source.end()
       })
     }

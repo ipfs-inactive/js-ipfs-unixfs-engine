@@ -3,7 +3,6 @@
 const UnixFS = require('ipfs-unixfs')
 const pull = require('pull-stream')
 const mh = require('multihashes')
-const isIPFS = require('is-ipfs')
 const parallel = require('async/parallel')
 
 exports.switchType = (node, dirHandler, fileHandler) => {
@@ -17,10 +16,6 @@ exports.switchType = (node, dirHandler, fileHandler) => {
 }
 
 exports.cleanMultihash = (multihash) => {
-  if (!isIPFS.multihash(multihash)) {
-    throw new Error('not valid multihash')
-  }
-
   if (Buffer.isBuffer(multihash)) {
     return mh.toB58String(multihash)
   }

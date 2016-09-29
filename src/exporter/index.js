@@ -2,7 +2,11 @@
 
 const traverse = require('pull-traverse')
 const pull = require('pull-stream')
+<<<<<<< HEAD:src/exporter/index.js
 const CID = require('cids')
+=======
+const isIPFS = require('is-ipfs')
+>>>>>>> fix some more tests:src/exporter.js
 
 const util = require('./../util')
 const switchType = util.switchType
@@ -12,12 +16,11 @@ const dirExporter = require('./dir')
 const fileExporter = require('./file')
 
 module.exports = (hash, ipldResolver, options) => {
-  try {
-    hash = cleanMultihash(hash)
-  } catch (err) {
-    return pull.error(err)
+  if (!isIPFS.multihash(hash)) {
+    return pull.error(new Error('not valid multihash'))
   }
 
+  hash = cleanMultihash(hash)
   options = options || {}
 
   function visitor (item) {
