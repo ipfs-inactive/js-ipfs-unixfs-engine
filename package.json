@@ -3,16 +3,15 @@
   "version": "0.12.0",
   "description": "JavaScript implementation of the unixfs Engine used by IPFS",
   "main": "src/index.js",
-  "jsnext:main": "src/index.js",
   "scripts": {
     "lint": "aegir-lint",
     "build": "aegir-build",
-    "test": "PHANTOM=off aegir-test",
+    "test": "aegir-test",
     "test:node": "aegir-test --env node",
-    "test:browser": "PHANTOM=off aegir-test --env browser",
-    "release": "PHANTOM=off aegir-release",
-    "release-minor": "PHANTOM=off aegir-release --type minor",
-    "release-major": "PHANTOM=off aegir-release --type major",
+    "test:browser": "aegir-test --env browser",
+    "release": "aegir-release",
+    "release-minor": "aegir-release --type minor",
+    "release-major": "aegir-release --type major",
     "coverage": "aegir-coverage",
     "coverage-publish": "aegir-coverage publish"
   },
@@ -32,7 +31,10 @@
   "bugs": {
     "url": "https://github.com/ipfs/js-ipfs-unixfs-engine/issues"
   },
-  "homepage": "https://github.com/ipfs/js-ipfs-unixfs-engineg#readme",
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "homepage": "https://github.com/ipfs/js-ipfs-unixfs-engine#readme",
   "devDependencies": {
     "aegir": "^8.1.2",
     "buffer-loader": "0.0.1",
