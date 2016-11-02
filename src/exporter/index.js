@@ -2,11 +2,8 @@
 
 const traverse = require('pull-traverse')
 const pull = require('pull-stream')
-<<<<<<< HEAD:src/exporter/index.js
 const CID = require('cids')
-=======
 const isIPFS = require('is-ipfs')
->>>>>>> fix some more tests:src/exporter.js
 
 const util = require('./../util')
 const switchType = util.switchType
