@@ -3,14 +3,18 @@
 const UnixFS = require('ipfs-unixfs')
 const pull = require('pull-stream')
 const mh = require('multihashes')
-const parallel = require('async/parallel')
 
 exports.switchType = (node, dirHandler, fileHandler) => {
   const data = UnixFS.unmarshal(node.data)
   const type = data.type
 
-  if (type === 'directory') return dirHandler()
-  if (type === 'file') return fileHandler()
+  if (type === 'directory') {
+    return dirHandler()
+  }
+
+  if (type === 'file') {
+    return fileHandler()
+  }
 
   return pull.error(new Error('Unkown node type'))
 }
@@ -21,11 +25,4 @@ exports.cleanMultihash = (multihash) => {
   }
 
   return multihash
-}
-
-exports.getSizeAndHash = (n, cb) => {
-  parallel({
-    multihash: (cb) => n.multihash(cb),
-    size: (cb) => n.size(cb)
-  }, cb)
 }
