@@ -52,7 +52,7 @@
     "rimraf": "^2.5.4"
   },
   "dependencies": {
-    "async": "^2.1.2",
+    "async": "^2.1.4",
     "cids": "^0.2.0",
     "ipfs-unixfs": "^0.1.5",
     "ipld-dag-pb": "^0.8.0",
