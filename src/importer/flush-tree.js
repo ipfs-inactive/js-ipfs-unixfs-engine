@@ -5,7 +5,8 @@ const UnixFS = require('ipfs-unixfs')
 const CID = require('cids')
 const dagPB = require('ipld-dag-pb')
 const mapValues = require('async/mapValues')
-const parallel = require('async/parallel')
+const series = require('async/series')
+const each = require('async/each')
 
 const DAGLink = dagPB.DAGLink
 const DAGNode = dagPB.DAGNode
@@ -121,43 +122,59 @@ function traverse (tree, sizeIndex, path, ipldResolver, source, done) {
 
     const keys = Object.keys(tree)
 
-    const ufsDir = new UnixFS('directory')
-    const node = new DAGNode(ufsDir.marshal())
+    let n
 
-    keys.forEach((key) => {
-      const b58mh = mh.toB58String(tree[key])
-      const link = new DAGLink(key, sizeIndex[b58mh], tree[key])
-      node.addRawLink(link)
-    })
+    series([
+      (cb) => {
+        const d = new UnixFS('directory')
+        DAGNode.create(d.marshal(), (err, node) => {
+          if (err) {
+            return cb(err)
+          }
+          n = node
+          cb()
+        })
+      },
+      (cb) => {
+        each(keys, (key, next) => {
+          const b58mh = mh.toB58String(tree[key])
+          const link = new DAGLink(key, sizeIndex[b58mh], tree[key])
 
-    parallel([
-      (cb) => node.multihash(cb),
-      (cb) => node.size(cb)
-    ], (err, res) => {
+          DAGNode.addLink(n, link, (err, node) => {
+            if (err) {
+              return next(err)
+            }
+            n = node
+            next()
+          })
+        }, cb)
+      },
+      (cb) => {
+        sizeIndex[mh.toB58String(n.multihash)] = n.size
+
+        ipldResolver.put({
+          node: n,
+          cid: new CID(n.multihash)
+        }, (err) => {
+          if (err) {
+            source.push(new Error('failed to store dirNode'))
+            return cb(err)
+          }
+          if (path) {
+            source.push({
+              path: path,
+              multihash: n.multihash,
+              size: n.size
+            })
+          }
+          cb()
+        })
+      }
+    ], (err) => {
       if (err) {
         return done(err)
       }
-
-      const multihash = res[0]
-      const size = res[1]
-
-      sizeIndex[mh.toB58String(multihash)] = size
-      ipldResolver.put({
-        node: node,
-        cid: new CID(multihash)
-      }, (err) => {
-        if (err) {
-          source.push(new Error('failed to store dirNode'))
-        } else if (path) {
-          source.push({
-            path: path,
-            multihash: multihash,
-            size: size
-          })
-        }
-
-        done(null, multihash)
-      })
+      done(null, n.multihash)
     })
   })
 }
