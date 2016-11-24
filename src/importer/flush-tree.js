@@ -5,9 +5,7 @@ const UnixFS = require('ipfs-unixfs')
 const CID = require('cids')
 const dagPB = require('ipld-dag-pb')
 const mapValues = require('async/mapValues')
-const series = require('async/series')
-const each = require('async/each')
-
+const waterfall = require('async/waterfall')
 const DAGLink = dagPB.DAGLink
 const DAGNode = dagPB.DAGNode
 
@@ -121,60 +119,37 @@ function traverse (tree, sizeIndex, path, ipldResolver, source, done) {
     // return this new node multihash
 
     const keys = Object.keys(tree)
+    const dir = new UnixFS('directory')
+    const links = keys.map((key) => {
+      const b58mh = mh.toB58String(tree[key])
+      return new DAGLink(key, sizeIndex[b58mh], tree[key])
+    })
 
-    let n
-
-    series([
-      (cb) => {
-        const d = new UnixFS('directory')
-        DAGNode.create(d.marshal(), (err, node) => {
-          if (err) {
-            return cb(err)
-          }
-          n = node
-          cb()
-        })
-      },
-      (cb) => {
-        each(keys, (key, next) => {
-          const b58mh = mh.toB58String(tree[key])
-          const link = new DAGLink(key, sizeIndex[b58mh], tree[key])
-
-          DAGNode.addLink(n, link, (err, node) => {
-            if (err) {
-              return next(err)
-            }
-            n = node
-            next()
-          })
-        }, cb)
-      },
-      (cb) => {
-        sizeIndex[mh.toB58String(n.multihash)] = n.size
+    waterfall([
+      (cb) => DAGNode.create(dir.marshal(), links, cb),
+      (node, cb) => {
+        sizeIndex[mh.toB58String(node.multihash)] = node.size
 
         ipldResolver.put({
-          node: n,
-          cid: new CID(n.multihash)
-        }, (err) => {
-          if (err) {
-            source.push(new Error('failed to store dirNode'))
-            return cb(err)
-          }
-          if (path) {
-            source.push({
-              path: path,
-              multihash: n.multihash,
-              size: n.size
-            })
-          }
-          cb()
-        })
+          node: node,
+          cid: new CID(node.multihash)
+        }, (err) => cb(err, node))
       }
-    ], (err) => {
+    ], (err, node) => {
       if (err) {
+        source.push(new Error('failed to store dirNode'))
         return done(err)
       }
-      done(null, n.multihash)
+
+      if (path) {
+        source.push({
+          path: path,
+          multihash: node.multihash,
+          size: node.size
+        })
+      }
+
+      done(null, node.multihash)
     })
   })
 }

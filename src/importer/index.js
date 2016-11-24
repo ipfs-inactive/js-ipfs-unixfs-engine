@@ -8,13 +8,13 @@ const pullWrite = require('pull-write')
 const parallel = require('async/parallel')
 const dagPB = require('ipld-dag-pb')
 const CID = require('cids')
-const series = require('async/series')
-const each = require('async/each')
+const waterfall = require('async/waterfall')
 
 const fsc = require('./../chunker/fixed-size')
 const createAndStoreTree = require('./flush-tree')
 
 const DAGNode = dagPB.DAGNode
+const DAGLink = dagPB.DAGLink
 
 const CHUNK_SIZE = 262144
 
@@ -77,32 +77,22 @@ function createAndStoreDir (item, ipldResolver, callback) {
   // 2. write it to the dag store
 
   const d = new UnixFS('directory')
-  let n
-
-  series([
-    (cb) => {
-      DAGNode.create(d.marshal(), (err, node) => {
-        if (err) {
-          return cb(err)
-        }
-        n = node
-        cb()
-      })
-    },
-    (cb) => {
+  waterfall([
+    (cb) => DAGNode.create(d.marshal(), cb),
+    (node, cb) => {
       ipldResolver.put({
-        node: n,
-        cid: new CID(n.multihash)
-      }, cb)
+        node: node,
+        cid: new CID(node.multihash)
+      }, (err) => cb(err, node))
     }
-  ], (err) => {
+  ], (err, node) => {
     if (err) {
       return callback(err)
     }
     callback(null, {
       path: item.path,
-      multihash: n.multihash,
-      size: n.size
+      multihash: node.multihash,
+      size: node.size
     })
   })
 }
@@ -166,60 +156,31 @@ function createAndStoreFile (file, ipldResolver, callback) {
       }
 
       // create a parent node and add all the leafs
-
       const f = new UnixFS('file')
-      let n
 
-      series([
-        (cb) => {
-          DAGNode.create(new Buffer(0), (err, node) => {
-            if (err) {
-              return cb(err)
-            }
-            n = node
-            cb()
-          })
-        },
-        (cb) => {
-          each(leaves, (leaf, next) => {
-            f.addBlockSize(leaf.leafSize)
-            DAGNode.addLink(n, {
-              name: leaf.Name,
-              size: leaf.Size,
-              multihash: leaf.Hash
-            }, (err, node) => {
-              if (err) {
-                return next(err)
-              }
-              n = node
-              next()
-            })
-          }, cb)
-        },
-        (cb) => {
-          DAGNode.create(f.marshal(), n.links, (err, node) => {
-            if (err) {
-              return cb(err)
-            }
-            n = node
-            cb()
-          })
-        },
-        (cb) => {
+      const links = leaves.map((leaf) => {
+        f.addBlockSize(leaf.leafSize)
+
+        return new DAGLink(leaf.Name, leaf.Size, leaf.Hash)
+      })
+
+      waterfall([
+        (cb) => DAGNode.create(f.marshal(), links, cb),
+        (node, cb) => {
           ipldResolver.put({
-            node: n,
-            cid: new CID(n.multihash)
-          }, cb)
+            node: node,
+            cid: new CID(node.multihash)
+          }, (err) => cb(err, node))
         }
-      ], (err) => {
+      ], (err, node) => {
         if (err) {
           return callback(err)
         }
 
         callback(null, {
           path: file.path,
-          multihash: n.multihash,
-          size: n.size
+          multihash: node.multihash,
+          size: node.size
         })
       })
     })
