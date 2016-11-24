@@ -172,7 +172,7 @@ function createAndStoreFile (file, ipldResolver, callback) {
 
       series([
         (cb) => {
-          DAGNode.create(f.marshal(), (err, node) => {
+          DAGNode.create(new Buffer(0), (err, node) => {
             if (err) {
               return cb(err)
             }
@@ -195,6 +195,15 @@ function createAndStoreFile (file, ipldResolver, callback) {
               next()
             })
           }, cb)
+        },
+        (cb) => {
+          DAGNode.create(f.marshal(), n.links, (err, node) => {
+            if (err) {
+              return cb(err)
+            }
+            n = node
+            cb()
+          })
         },
         (cb) => {
           ipldResolver.put({
