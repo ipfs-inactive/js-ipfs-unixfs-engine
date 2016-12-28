@@ -7,8 +7,7 @@ const Builder = require('./builder')
 const reducers = {
   flat: require('./flat'),
   balanced: require('./balanced'),
-  trickle: require('./trickle'),
-  'depth-first': require('./depth-first')
+  trickle: require('./trickle')
 }
 
 const defaultOptions = {
