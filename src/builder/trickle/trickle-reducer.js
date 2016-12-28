@@ -29,7 +29,6 @@ module.exports = function trickleReduceToRoot (reduce, options) {
     } else {
       assert.equal(roots.length, 1, 'need exactly one root')
       const root = roots[0]
-      // console.log('replying root', JSON.stringify(root, null, '  '))
       result.push(root)
       result.end()
     }
