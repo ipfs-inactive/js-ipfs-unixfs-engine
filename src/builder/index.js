@@ -11,7 +11,7 @@ const reducers = {
 }
 
 const defaultOptions = {
-  strategy: 'flat',
+  strategy: 'balanced',
   highWaterMark: 100
 }
 
