@@ -1,5 +1,6 @@
 'use strict'
 
+const extend = require('deep-extend')
 const assert = require('assert')
 const UnixFS = require('ipfs-unixfs')
 const pull = require('pull-stream')
@@ -13,11 +14,13 @@ const reduce = require('./reduce')
 const DAGNode = dagPB.DAGNode
 
 const defaultOptions = {
-  chunkSize: 262144
+  chunkerOptions: {
+    maxChunkSize: 262144
+  }
 }
 
 module.exports = function (Chunker, ipldResolver, Reducer, _options) {
-  const options = Object.assign({}, defaultOptions, _options)
+  const options = extend({}, defaultOptions, _options)
 
   return function (source, files) {
     return function (items, cb) {
@@ -85,7 +88,7 @@ module.exports = function (Chunker, ipldResolver, Reducer, _options) {
 
     pull(
       file.content,
-      Chunker(options),
+      Chunker(options.chunkerOptions),
       pull.map(chunk => new Buffer(chunk)),
       pull.map(buffer => new UnixFS('file', buffer)),
       pull.asyncMap((fileNode, callback) => {

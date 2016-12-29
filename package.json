@@ -42,7 +42,6 @@
     "aegir": "^9.3.0",
     "buffer-loader": "0.0.1",
     "chai": "^3.5.0",
-    "deep-extend": "^0.4.1",
     "fs-pull-blob-store": "^0.4.1",
     "idb-pull-blob-store": "^0.5.1",
     "ipfs-block-service": "^0.8.0",
@@ -55,6 +54,7 @@
   "dependencies": {
     "async": "^2.1.4",
     "cids": "^0.3.5",
+    "deep-extend": "^0.4.1",
     "ipfs-unixfs": "^0.1.9",
     "ipld-dag-pb": "^0.9.3",
     "ipld-resolver": "^0.4.1",

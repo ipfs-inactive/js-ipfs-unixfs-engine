@@ -159,8 +159,10 @@ module.exports = (repo) => {
 
       const options = {
         strategy: strategy,
-        chunkSize: 1024,
-        maxChildrenPerNode: 10
+        maxChildrenPerNode: 10,
+        chunkerOptions: {
+          maxChunkSize: 1024
+        }
       }
 
       before(() => {
