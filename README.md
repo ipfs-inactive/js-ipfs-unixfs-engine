@@ -156,7 +156,7 @@ In the second argument of the importer constructor you can specify the following
 
 * `chunker` (string, defaults to `"fixed"`): the chunking strategy. Now only supports `"fixed"`
 * `chunkerOptions` (object, optional): the options for the chunker. Defaults to an object with the following properties:
-  * `chunkSize` (positive integer, defaults to `262144`): the maximum chunk size for the `fixed` chunker.
+  * `maxChunkSize` (positive integer, defaults to `262144`): the maximum chunk size for the `fixed` chunker.
 * `strategy` (string, defaults to `"balanced"`): the DAG builder strategy name. Supports:
   * `flat`: flat list of chunks
   * `balanced`: builds a balanced tree
