@@ -14,7 +14,6 @@ const DAGNode = dagPB.DAGNode
 
 const defaultOptions = {
   chunkSize: 262144
-  // chunkSize: 26214
 }
 
 module.exports = function (Chunker, ipldResolver, Reducer, _options) {
