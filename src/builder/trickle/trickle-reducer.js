@@ -18,8 +18,12 @@ module.exports = function trickleReduceToRoot (reduce, options) {
     },
     null,
     1,
-    function (end) {
-      source.end(end)
+    function (err) {
+      if (err) {
+        source.emit('error', err)
+      } else {
+        source.end()
+      }
     }
   )
 
