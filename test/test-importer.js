@@ -48,8 +48,8 @@ const strategyBaseFiles = {
   }),
   trickle: extend({}, baseFiles, {
     '1.2MiB.txt': {
-      multihash: 'QmUzSDPkvD7tPESyWMpXcEXuEkfVGAMdJCvNUjqVPGZNQn',
-      size: 1339479
+      multihash: 'QmfAXFpYt1siTCfQjoeZqFT1zUR9fDGhpo2eaHf1HGrqqG',
+      size: 1339046
     }
   })
 }
@@ -83,20 +83,20 @@ const strategyOverrides = {
   trickle: {
     'foo-big': {
       path: 'foo-big',
-      multihash: 'QmeC6Dcabe34GNNJbp3xeXiVGZJBuJqBYirhHWPSjTBrxb',
-      size: 1339537
+      multihash: 'QmWYCMiFLHLzXALkmqL4qbgr2L71HWz2h4KjEcgDPgbwHU',
+      size: 1339104
     },
     pim: {
-      multihash: 'QmbPxVyyUNsVoWZ3LskfuqEMku7F7sCGUFgidwb2igSxvB',
-      size: 1339803
+      multihash: 'QmeAp7rrEezsHVy66oXjj2ANcrSHSxQ3CcH6HY3fNF2FZm',
+      size: 1339370
     },
     'pam/pum': {
-      multihash: 'QmbPxVyyUNsVoWZ3LskfuqEMku7F7sCGUFgidwb2igSxvB',
-      size: 1339803
+      multihash: 'QmeAp7rrEezsHVy66oXjj2ANcrSHSxQ3CcH6HY3fNF2FZm',
+      size: 1339370
     },
     pam: {
-      multihash: 'QmaUetVJdQxL5ba5E2L6ocdKwk55WQD1o6ZCn3KFodsVFb',
-      size: 2679387
+      multihash: 'Qmdn2Y5S9kYKsqS8cACoW8r3N5duPeP3LW4cM6eYv8DECA',
+      size: 2678521
     }
   }
 

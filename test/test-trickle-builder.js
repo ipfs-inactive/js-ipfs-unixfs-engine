@@ -8,14 +8,14 @@ const builder = require('../src/builder/trickle')
 
 function reduce (leaves, callback) {
   if (leaves.length > 1) {
-    callback(null, { children: leaves })
+    callback(null, leaves)
   } else {
     callback(null, leaves[0])
   }
 }
 
 const options = {
-  maxChildrenPerNode: 4,
+  maxChildrenPerNode: 5,
   layerRepeat: 2
 }
 
@@ -38,9 +38,13 @@ describe('trickle builder', () => {
       builder(reduce, options),
       pull.collect((err, result) => {
         expect(err).to.not.exist
-        expect(result).to.be.eql([{
-          children: [1, 2, 3]
-        }])
+        expect(result).to.be.eql([
+          [
+            1,
+            2,
+            3
+          ]
+        ])
         callback()
       })
     )
@@ -48,41 +52,44 @@ describe('trickle builder', () => {
 
   it('forms correct trickle tree', callback => {
     pull(
-      pull.values([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+      pull.values([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]),
       builder(reduce, options),
       pull.collect((err, result) => {
         expect(err).to.not.exist
         expect(result).to.be.eql([
-          {
-            children: [
+          [
+            [
               1,
               2,
-              {
-                children: [
-                  3,
-                  4,
-                  {
-                    children: [
-                      5,
-                      6,
-                      {
-                        children: [
-                          7,
-                          8,
-                          {
-                            children: [
-                              9,
-                              10
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
+              3
+            ],
+            [
+              4,
+              5,
+              6
+            ],
+            [
+              7,
+              8,
+              9,
+              [
+                10,
+                11,
+                12
+              ],
+              [
+                13,
+                14,
+                15
+              ],
+              [
+                16,
+                17,
+                18,
+                19
+              ]
             ]
-          }
+          ]
         ])
         callback()
       })
