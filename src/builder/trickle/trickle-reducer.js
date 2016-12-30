@@ -1,31 +1,17 @@
 'use strict'
 
 const pull = require('pull-stream')
-const pullWrite = require('pull-write')
 const pushable = require('pull-pushable')
 const batch = require('pull-batch')
+const pullPair = require('pull-pair')
 const waterfall = require('async/waterfall')
 
 module.exports = function trickleReduceToRoot (reduce, options) {
   const maxLeafs = options.maxChildrenPerNode - options.layerRepeat
-  const source = pushable()
-  const result = pushable()
 
-  const sink = pullWrite(
-    function (item, cb) {
-      source.push(item)
-      cb()
-    },
-    null,
-    1,
-    function (err) {
-      if (err) {
-        source.emit('error', err)
-      } else {
-        source.end()
-      }
-    }
-  )
+  const pair = pullPair()
+  const source = pair.source
+  const result = pushable()
 
   const batched = pull(
     source,
@@ -72,7 +58,7 @@ module.exports = function trickleReduceToRoot (reduce, options) {
   }
 
   return {
-    sink: sink,
+    sink: pair.sink,
     source: result
   }
 }

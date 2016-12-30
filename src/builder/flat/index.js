@@ -2,27 +2,12 @@
 
 const pull = require('pull-stream')
 const pushable = require('pull-pushable')
-const pullWrite = require('pull-write')
+const pullPair = require('pull-pair')
 const batch = require('pull-batch')
 
 module.exports = function (reduce, options) {
-  const source = pushable()
-  const sink = pullWrite(
-    function (d, cb) {
-      source.push(d)
-      cb()
-    },
-    null,
-    1,
-    function (err) {
-      if (err) {
-        source.emit('error', err)
-      } else {
-        source.end()
-      }
-    }
-  )
-
+  const pair = pullPair()
+  const source = pair.source
   const result = pushable()
 
   pull(
@@ -40,7 +25,7 @@ module.exports = function (reduce, options) {
   )
 
   return {
-    sink: sink,
+    sink: pair.sink,
     source: result
   }
 }

@@ -2,24 +2,13 @@
 
 const assert = require('assert')
 const pull = require('pull-stream')
-const pullWrite = require('pull-write')
 const pushable = require('pull-pushable')
+const pullPair = require('pull-pair')
 const batch = require('pull-batch')
 
 module.exports = function balancedReduceToRoot (reduce, options) {
-  const source = pushable()
-
-  const sink = pullWrite(
-    function (item, cb) {
-      source.push(item)
-      cb()
-    },
-    null,
-    1,
-    function (end) {
-      source.end(end)
-    }
-  )
+  const pair = pullPair()
+  const source = pair.source
 
   const result = pushable()
 
@@ -58,7 +47,7 @@ module.exports = function balancedReduceToRoot (reduce, options) {
   }
 
   return {
-    sink: sink,
+    sink: pair.sink,
     source: result
   }
 }
