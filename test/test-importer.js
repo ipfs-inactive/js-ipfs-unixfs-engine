@@ -55,8 +55,8 @@ const strategyBaseFiles = {
 }
 
 const strategies = [
-  // 'flat',
-  // 'balanced',
+  'flat',
+  'balanced',
   'trickle'
 ]
 
