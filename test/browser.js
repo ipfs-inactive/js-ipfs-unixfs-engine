@@ -57,4 +57,5 @@ describe('IPFS data importing tests on the Browser', function () {
   require('./test-fixed-size-chunker')
   require('./test-exporter')(repo)
   require('./test-importer')(repo)
+  require('./test-import-export')(repo)
 })
