@@ -106,13 +106,12 @@ module.exports = function trickleReduceToRoot (reduce, options) {
     function iterate () {
       deeper = null
       iteration++
-      if (depth === 0 && iteration === options.maxChildrenPerNode) {
-        iteration = 0
-        depth++
-      } else if (depth > 0 && iteration === options.layerRepeat) {
+      if (depth === 0 && iteration === options.maxChildrenPerNode ||
+          depth > 0 && iteration === options.layerRepeat) {
         iteration = 0
         depth++
       }
+
       if (!aborting && maxDepth >= 0 && depth > maxDepth ||
           aborting && !pendingResumes) {
         aborting = true
