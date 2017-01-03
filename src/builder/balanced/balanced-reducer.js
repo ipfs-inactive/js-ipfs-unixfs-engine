@@ -12,7 +12,7 @@ module.exports = function balancedReduceToRoot (reduce, options) {
 
   const result = pushable()
 
-  reduceToParents(source, function (err, roots) {
+  reduceToParents(source, (err, roots) => {
     if (err) {
       result.emit('error', err)
       return // early

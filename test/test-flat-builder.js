@@ -15,7 +15,7 @@ function reduce (leaves, callback) {
 }
 
 describe('flat builder', () => {
-  it('reduces one value into itself', callback => {
+  it('reduces one value into itself', (callback) => {
     pull(
       pull.values([1]),
       builder(reduce),
@@ -27,7 +27,7 @@ describe('flat builder', () => {
     )
   })
 
-  it('reduces 2 values into parent', callback => {
+  it('reduces 2 values into parent', (callback) => {
     pull(
       pull.values([1, 2]),
       builder(reduce),

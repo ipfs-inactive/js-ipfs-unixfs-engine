@@ -19,7 +19,7 @@ const options = {
 }
 
 describe('balanced builder', () => {
-  it('reduces one value into itself', callback => {
+  it('reduces one value into itself', (callback) => {
     pull(
       pull.values([1]),
       builder(reduce, options),
@@ -31,7 +31,7 @@ describe('balanced builder', () => {
     )
   })
 
-  it('reduces 3 values into parent', callback => {
+  it('reduces 3 values into parent', (callback) => {
     pull(
       pull.values([1, 2, 3]),
       builder(reduce, options),
@@ -45,7 +45,7 @@ describe('balanced builder', () => {
     )
   })
 
-  it('obeys max children per node', callback => {
+  it('obeys max children per node', (callback) => {
     pull(
       pull.values([1, 2, 3, 4]),
       builder(reduce, options),
@@ -66,7 +66,7 @@ describe('balanced builder', () => {
     )
   })
 
-  it('refolds 2 parent nodes', callback => {
+  it('refolds 2 parent nodes', (callback) => {
     pull(
       pull.values([1, 2, 3, 4, 5, 6, 7]),
       builder(reduce, options),

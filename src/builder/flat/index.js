@@ -14,7 +14,7 @@ module.exports = function (reduce, options) {
     source,
     batch(Infinity),
     pull.asyncMap(reduce),
-    pull.collect(function (err, roots) {
+    pull.collect((err, roots) => {
       if (err) {
         result.emit('error', err)
         return // early

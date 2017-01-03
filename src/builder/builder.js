@@ -19,7 +19,7 @@ const defaultOptions = {
   }
 }
 
-module.exports = function (Chunker, ipldResolver, Reducer, _options) {
+module.exports = function (createChunker, ipldResolver, createReducer, _options) {
   const options = extend({}, defaultOptions, _options)
 
   return function (source, files) {
@@ -84,11 +84,11 @@ module.exports = function (Chunker, ipldResolver, Reducer, _options) {
       return callback(new Error('invalid content'))
     }
 
-    const reducer = Reducer(reduce(file, ipldResolver), options)
+    const reducer = createReducer(reduce(file, ipldResolver), options)
 
     pull(
       file.content,
-      Chunker(options.chunkerOptions),
+      createChunker(options.chunkerOptions),
       pull.map(chunk => new Buffer(chunk)),
       pull.map(buffer => new UnixFS('file', buffer)),
       pull.asyncMap((fileNode, callback) => {
