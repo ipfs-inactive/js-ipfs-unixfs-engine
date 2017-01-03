@@ -17,7 +17,7 @@ module.exports = function balancedReduceToRoot (reduce, options) {
       result.emit('error', err)
       return // early
     }
-    assert.equal(roots.length, 1, 'no root')
+    assert.equal(roots.length, 1, 'need one root')
     result.push(roots[0])
     result.end()
   })

@@ -1,5 +1,6 @@
 'use strict'
 
+const assert = require('assert')
 const pull = require('pull-stream')
 const pushable = require('pull-pushable')
 const batch = require('pull-batch')
@@ -24,6 +25,7 @@ module.exports = function trickleReduceToRoot (reduce, options) {
       if (err) {
         result.emit('error', err)
       } else {
+        assert.equal(nodes.length, 1, 'need one root')
         result.push(nodes[0])
         result.end()
       }
