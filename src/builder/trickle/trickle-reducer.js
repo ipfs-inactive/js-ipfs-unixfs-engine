@@ -23,7 +23,7 @@ module.exports = function trickleReduceToRoot (reduce, options) {
     pull.asyncMap(reduce),
     pull.collect((err, nodes) => {
       if (err) {
-        result.emit('error', err)
+        result.end(err)
       } else {
         assert.equal(nodes.length, 1, 'need one root')
         result.push(nodes[0])
@@ -82,7 +82,7 @@ module.exports = function trickleReduceToRoot (reduce, options) {
           pull.collect((err, nodes) => {
             pendingResumes--
             if (err) {
-              result.emit('error', err)
+              result.end(err)
               return
             }
             nodes.forEach(node => {
@@ -126,7 +126,7 @@ module.exports = function trickleReduceToRoot (reduce, options) {
 
     function end (err) {
       if (err) {
-        result.emit('error', err)
+        result.end(err)
         return
       }
       if (deeper) {

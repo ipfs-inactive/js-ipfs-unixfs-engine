@@ -17,7 +17,7 @@ module.exports = function (reduce, options) {
     pull.asyncMap(reduce),
     pull.collect((err, roots) => {
       if (err) {
-        result.emit('error', err)
+        result.end(err)
         return // early
       }
       assert.equal(roots.length, 1, 'need one root')
