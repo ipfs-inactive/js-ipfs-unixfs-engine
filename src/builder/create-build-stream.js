@@ -14,12 +14,11 @@ module.exports = function createBuildStream (createStrategy, ipldResolver, flush
     options.highWaterMark,
     (err) => {
       if (err) {
-        return source.end(err)
+        source.end(err)
+        return // early
       }
 
-      flushTree(files, ipldResolver, source, () => {
-        source.end()
-      })
+      flushTree(files, ipldResolver, source, source.end)
     }
   )
 

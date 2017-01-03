@@ -170,7 +170,7 @@ module.exports = (repo) => {
         ipldResolver = new IPLDResolver(bs)
       })
 
-      it('bad input', (done) => {
+      it('fails on bad input', (done) => {
         pull(
           pull.values([{
             path: '200Bytes.txt',
@@ -179,6 +179,27 @@ module.exports = (repo) => {
           importer(ipldResolver, options),
           pull.onEnd((err) => {
             expect(err).to.exist
+            done()
+          })
+        )
+      })
+
+      it('fails on more than one root', (done) => {
+        pull(
+          pull.values([
+            {
+              path: '/beep/200Bytes.txt',
+              content: pull.values([smallFile])
+            },
+            {
+              path: '/boop/200Bytes.txt',
+              content: pull.values([smallFile])
+            }
+          ]),
+          importer(ipldResolver, options),
+          pull.onEnd((err) => {
+            expect(err).to.exist
+            expect(err.message).to.be.eql('detected more than one root')
             done()
           })
         )
