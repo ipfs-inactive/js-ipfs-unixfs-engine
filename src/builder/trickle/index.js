@@ -3,7 +3,7 @@
 const trickleReducer = require('./trickle-reducer')
 
 const defaultOptions = {
-  maxChildrenPerNode: 172,
+  maxChildrenPerNode: 174,
   layerRepeat: 4
 }
 

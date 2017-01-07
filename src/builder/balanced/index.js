@@ -3,7 +3,7 @@
 const balancedReducer = require('./balanced-reducer')
 
 const defaultOptions = {
-  maxChildrenPerNode: 172
+  maxChildrenPerNode: 174
 }
 
 module.exports = function (reduce, _options) {
