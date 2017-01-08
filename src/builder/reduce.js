@@ -8,9 +8,9 @@ const CID = require('cids')
 const DAGLink = dagPB.DAGLink
 const DAGNode = dagPB.DAGNode
 
-module.exports = function (file, ipldResolver) {
+module.exports = function (file, ipldResolver, options) {
   return function (leaves, callback) {
-    if (leaves.length === 1) {
+    if (leaves.length === 1 && options.reduceSingleLeafToSelf) {
       const leave = leaves[0]
       callback(null, {
         path: file.path,

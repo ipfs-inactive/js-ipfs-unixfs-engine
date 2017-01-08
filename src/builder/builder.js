@@ -84,7 +84,7 @@ module.exports = function (createChunker, ipldResolver, createReducer, _options)
       return callback(new Error('invalid content'))
     }
 
-    const reducer = createReducer(reduce(file, ipldResolver), options)
+    const reducer = createReducer(reduce(file, ipldResolver, options), options)
 
     pull(
       file.content,

@@ -12,7 +12,8 @@ const reducers = {
 
 const defaultOptions = {
   strategy: 'balanced',
-  highWaterMark: 100
+  highWaterMark: 100,
+  reduceSingleLeafToSelf: false
 }
 
 module.exports = function (Chunker, ipldResolver, flushTree, _options) {

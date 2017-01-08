@@ -163,7 +163,7 @@ In the second argument of the importer constructor you can specify the following
   * `trickle`: builds [a trickle tree](https://github.com/ipfs/specs/pull/57#issuecomment-265205384)
 * `maxChildrenPerNode` (positive integer, defaults to `172`): the maximum children per node for the `balanced` and `trickle` DAG builder strategies
 * `layerRepeat` (positive integer, defaults to 4): (only applicable to the `trickle` DAG builder strategy). The maximum repetition of parent nodes for each layer of the tree.
-
+* `reduceSingleLeafToSelf` (boolean, defaults to `false`): optimization for, when reducing a set of nodes with one node, reduce it to that node.
 
 ### Example Exporter
 
