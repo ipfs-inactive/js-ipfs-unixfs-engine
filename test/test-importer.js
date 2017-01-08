@@ -24,8 +24,8 @@ const smallFile = loadFixture(__dirname, 'fixtures/200Bytes.txt')
 const baseFiles = {
   '200Bytes.txt': {
     path: '200Bytes.txt',
-    multihash: 'QmQmZQxSKQppbsWfVzBvg59Cn3DKtsNVQ94bjAxg2h3Lb8',
-    size: 211,
+    multihash: 'QmZU6acAmfBHBa4esfNfSH9G9Sx1h49KGpqYzPvXjTCWFe',
+    size: 264,
     name: '',
     leafSize: 200
   },
@@ -68,16 +68,16 @@ const strategyOverrides = {
       size: 1335478
     },
     pim: {
-      multihash: 'QmUpzaN4Jio2GB3HoPSRCMQD5EagdMWjSEGD4SGZXaCw7W',
-      size: 1335744
+      multihash: 'QmSxR2CPcJqE3WVV9rT4mn7ZB3F3NwyyLUABBFb8MZRABf',
+      size: 1335797
     },
     'pam/pum': {
-      multihash: 'QmUpzaN4Jio2GB3HoPSRCMQD5EagdMWjSEGD4SGZXaCw7W',
-      size: 1335744
+      multihash: 'QmSxR2CPcJqE3WVV9rT4mn7ZB3F3NwyyLUABBFb8MZRABf',
+      size: 1335797
     },
     pam: {
-      multihash: 'QmVoVD4fEWFLJLjvRCg4bGrziFhgECiaezp79AUfhuLgno',
-      size: 2671269
+      multihash: 'QmdQaTo7JUZ1otkpnLuRdmL75PZUUDovVBxEU3XzKCKsJt',
+      size: 2671322
     }
   },
   trickle: {
@@ -87,16 +87,16 @@ const strategyOverrides = {
       size: 1334657
     },
     pim: {
-      multihash: 'QmPAn3G2x2nrq4A1fu2XUpwWtpqG4D1YXFDrU615NHvJbr',
-      size: 1334923
+      multihash: 'QmYHiiqpWySwPS4zRCv4976baa9epk2VYY6GaAEWhEboZu',
+      size: 1334976
     },
     'pam/pum': {
-      multihash: 'QmPAn3G2x2nrq4A1fu2XUpwWtpqG4D1YXFDrU615NHvJbr',
-      size: 1334923
+      multihash: 'QmYHiiqpWySwPS4zRCv4976baa9epk2VYY6GaAEWhEboZu',
+      size: 1334976
     },
     pam: {
-      multihash: 'QmZTJah1xpG9X33ZsPtDEi1tYSHGDqQMRHsGV5xKzAR2j4',
-      size: 2669627
+      multihash: 'QmTWpcXJD4mph83PgXnEGqNXGxM3JgADM2hZmYtWpscCj7',
+      size: 2669680
     }
   }
 
@@ -111,13 +111,13 @@ module.exports = (repo) => {
       }),
       foo: {
         path: 'foo',
-        multihash: 'QmQrb6KKWGo8w7zKfx2JksptY6wN7B2ysSBdKZr4xMU36d',
-        size: 320
+        multihash: 'QmZcDXF22anrX3vBbDxMThN5BVCpkrg1KAAXhzdJ6S7g6G',
+        size: 373
       },
       'foo/bar': {
         path: 'foo/bar',
-        multihash: 'Qmf5BQbTUyUAvd6Ewct83GYGnE1F6btiC3acLhR8MDxgkD',
-        size: 270
+        multihash: 'QmQE64CC7KR8uL75WLAXXtZ9Ms1ZXDM9ptaqGbpLfGog52',
+        size: 323
       },
       'foo-big/1.2MiB.txt': extend({}, baseFiles['1.2MiB.txt'], {
         path: 'foo-big/1.2MiB.txt'
@@ -135,8 +135,8 @@ module.exports = (repo) => {
       }),
       pim: {
         path: 'pim',
-        multihash: 'QmNk8VPGb3fkAQgoxctXo4Wmnr4PayFTASy4MiVXTtXqiA',
-        size: 1328386
+        multihash: 'QmZ8gnWwvoyYXd4S1WsnQSKP7MhLhnJkEotEnxgkenyaib',
+        size: 1328439
       },
       'empty-dir': {
         path: 'empty-dir',
@@ -144,12 +144,12 @@ module.exports = (repo) => {
         size: 4
       },
       'pam/pum': {
-        multihash: 'QmNk8VPGb3fkAQgoxctXo4Wmnr4PayFTASy4MiVXTtXqiA',
-        size: 1328386
+        multihash: 'QmZ8gnWwvoyYXd4S1WsnQSKP7MhLhnJkEotEnxgkenyaib',
+        size: 1328439
       },
       pam: {
-        multihash: 'QmPAixYTaYnPe795fcWcuRpo6tfwHgRKNiBHpMzoomDVN6',
-        size: 2656553
+        multihash: 'QmZ4veCEhzr9wPekpfHvYisK1BqaYJJ4pHf2uwGdYgrsYG',
+        size: 2656606
       }
     }, strategyOverrides[strategy])
 
