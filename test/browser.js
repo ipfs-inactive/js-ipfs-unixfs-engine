@@ -58,4 +58,5 @@ describe('IPFS data importing tests on the Browser', function () {
   require('./test-exporter')(repo)
   require('./test-importer')(repo)
   require('./test-import-export')(repo)
+  require('./test-hash-parity-with-go-ipfs')(repo)
 })

@@ -5,12 +5,10 @@ const expect = require('chai').expect
 const BlockService = require('ipfs-block-service')
 const IPLDResolver = require('ipld-resolver')
 const pull = require('pull-stream')
-const loadFixture = require('aegir/fixtures')
 
+const randomByteStream = require('./helpers/finite-pseudorandom-byte-stream')
 const unixFSEngine = require('./../')
 const exporter = unixFSEngine.exporter
-
-const bigFile = loadFixture(__dirname, 'fixtures/1.2MiB.txt')
 
 const strategies = [
   'flat',
@@ -19,14 +17,10 @@ const strategies = [
 ]
 
 module.exports = (repo) => {
+  let bigFile
   strategies.forEach((strategy) => {
     const importerOptions = {
-      strategy: strategy,
-      maxChildrenPerNode: 10,
-      layerRepeat: 2,
-      chunkerOptions: {
-        maxChunkSize: 1024
-      }
+      strategy: strategy
     }
 
     describe('import export using ' + strategy + ' builder strategy', () => {
@@ -37,15 +31,30 @@ module.exports = (repo) => {
         ipldResolver = new IPLDResolver(bs)
       })
 
+      before((done) => {
+        if (bigFile) {
+          return done()
+        }
+
+        pull(
+          randomByteStream(50000000, 8372),
+          pull.collect((err, buffers) => {
+            if (err) {
+              done(err)
+            } else {
+              bigFile = buffers
+              done()
+            }
+          })
+        )
+      })
+
       it('import and export', (done) => {
-        const path = strategy + '-1.2MiB.txt'
+        const path = strategy + '-big.dat'
         pull(
           pull.values([{
             path: path,
-            content: pull.values([
-              bigFile,
-              Buffer('hello world')
-            ])
+            content: pull.values(bigFile)
           }]),
           unixFSEngine.importer(ipldResolver, importerOptions),
           pull.map((file) => {
@@ -56,8 +65,8 @@ module.exports = (repo) => {
           pull.flatten(),
           pull.collect((err, files) => {
             expect(err).to.not.exist
-            expect(files[0].size).to.be.eql(bigFile.length + 11)
-            fileEql(files[0], Buffer.concat([bigFile, Buffer('hello world')]), done)
+            expect(files[0].size).to.be.eql(bigFile.reduce(reduceLength, 0))
+            fileEql(files[0], Buffer.concat(bigFile), done)
           })
         )
       })
@@ -85,4 +94,8 @@ function fileEql (f1, f2, done) {
       done()
     })
   )
+}
+
+function reduceLength (acc, chunk) {
+  return acc + chunk.length
 }

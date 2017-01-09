@@ -43,4 +43,5 @@ describe('IPFS UnixFS Engine', () => {
   require('./test-exporter')(repo)
   require('./test-importer')(repo)
   require('./test-import-export')(repo)
+  require('./test-hash-parity-with-go-ipfs')(repo)
 })
