@@ -48,7 +48,6 @@
     "ipfs-repo": "^0.11.2",
     "ncp": "^2.0.0",
     "pre-commit": "^1.2.2",
-    "pull-file": "^1.0.0",
     "pull-generate": "^2.2.0",
     "pull-zip": "^2.0.1",
     "rimraf": "^2.5.4"
