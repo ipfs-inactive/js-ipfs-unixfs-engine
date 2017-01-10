@@ -4,6 +4,7 @@ const extend = require('deep-extend')
 const assert = require('assert')
 const UnixFS = require('ipfs-unixfs')
 const pull = require('pull-stream')
+const through = require('pull-through')
 const parallel = require('async/parallel')
 const waterfall = require('async/waterfall')
 const dagPB = require('ipld-dag-pb')
@@ -86,6 +87,9 @@ module.exports = function (createChunker, ipldResolver, createReducer, _options)
 
     const reducer = createReducer(reduce(file, ipldResolver, options), options)
 
+    let previous
+    let count = 0
+
     pull(
       file.content,
       createChunker(options.chunkerOptions),
@@ -114,6 +118,24 @@ module.exports = function (createChunker, ipldResolver, createReducer, _options)
           name: ''
         }
       }),
+      through( // mark as single node if only one single node
+        function onData (data) {
+          count++
+          if (previous) {
+            this.queue(previous)
+          }
+          previous = data
+        },
+        function ended () {
+          if (previous) {
+            if (count === 1) {
+              previous.single = true
+            }
+            this.queue(previous)
+          }
+          this.queue(null)
+        }
+      ),
       reducer,
       pull.collect((err, roots) => {
         if (err) {

@@ -10,7 +10,7 @@ const DAGNode = dagPB.DAGNode
 
 module.exports = function (file, ipldResolver, options) {
   return function (leaves, callback) {
-    if (leaves.length === 1 && options.reduceSingleLeafToSelf) {
+    if (leaves.length === 1 && (leaves[0].single || options.reduceSingleLeafToSelf)) {
       const leave = leaves[0]
       callback(null, {
         path: file.path,
