@@ -195,6 +195,20 @@ module.exports = (repo) => {
           }))
       })
 
+      it('doesn\'t yield anything on empty file', (done) => {
+        pull(
+          pull.values([{
+            path: 'emptyfile',
+            content: pull.empty()
+          }]),
+          importer(ipldResolver, options),
+          pull.collect((err, nodes) => {
+            expect(err).to.not.exist
+            expect(nodes.length).to.be.eql(0)
+            done()
+          }))
+      })
+
       it('fails on more than one root', (done) => {
         pull(
           pull.values([
