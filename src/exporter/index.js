@@ -26,7 +26,7 @@ module.exports = (hash, ipldResolver, options) => {
       // which needs no further resolving.
       // No further resolving means that the visitor does not
       // need to do anyting else, so he's returning
-      // an empry stream
+      // an empty stream
 
       // TODO: perhaps change the pull streams construct.
       // Instead of traversing with a visitor, consider recursing.
