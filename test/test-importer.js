@@ -204,7 +204,9 @@ module.exports = (repo) => {
           importer(ipldResolver, options),
           pull.collect((err, nodes) => {
             expect(err).to.not.exist
-            expect(nodes.length).to.be.eql(0)
+            expect(nodes.length).to.be.eql(1)
+            // always yield empty node
+            expect(mh.toB58String(nodes[0].multihash)).to.be.eql('QmfJMCvenrj4SKKRc48DYPxwVdS44qCUCqqtbqhJuSTWXP')
             done()
           }))
       })
