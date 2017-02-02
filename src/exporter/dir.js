@@ -4,6 +4,7 @@ const path = require('path')
 const pull = require('pull-stream')
 const paramap = require('pull-paramap')
 const CID = require('cids')
+const cat = require('pull-cat')
 
 const fileExporter = require('./file')
 const switchType = require('../util').switchType
@@ -34,9 +35,14 @@ function dirExporter (node, name, ipldResolver) {
         return cb(err)
       }
 
+      const dir = {
+        path: item.path,
+        size: item.size
+      }
+
       cb(null, switchType(
         n,
-        () => dirExporter(n, item.path, ipldResolver),
+        () => cat([pull.values([dir]), dirExporter(n, item.path, ipldResolver)]),
         () => fileExporter(n, item.path, ipldResolver)
       ))
     })),
