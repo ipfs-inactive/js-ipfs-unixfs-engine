@@ -9,7 +9,9 @@ const fileExporter = require('./file')
 const switchType = require('../util').switchType
 
 // Logic to export a unixfs directory.
-module.exports = (node, name, ipldResolver) => {
+module.exports = dirExporter
+
+function dirExporter (node, name, ipldResolver) {
   // The algorithm below is as follows
   //
   // 1. Take all links from a given directory node
@@ -20,6 +22,7 @@ module.exports = (node, name, ipldResolver) => {
   //      - `directory`: return node
   //      - `file`: use the fileExporter to load and return the file
   // 4. Flatten
+
   return pull(
     pull.values(node.links),
     pull.map((link) => ({
@@ -33,7 +36,7 @@ module.exports = (node, name, ipldResolver) => {
 
       cb(null, switchType(
         n,
-        () => pull.values([item]),
+        () => dirExporter(n, item.path, ipldResolver),
         () => fileExporter(n, item.path, ipldResolver)
       ))
     })),
