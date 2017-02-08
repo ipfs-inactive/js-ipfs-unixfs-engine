@@ -33,7 +33,7 @@ module.exports = (hash, ipldResolver, options) => {
       return pull.empty()
     }
     return pull(
-      ipldResolver.getStream(new CID(item.hash)),
+      ipldResolver._getStream(new CID(item.hash)),
       pull.map((node) => switchType(
         node,
         () => dirExporter(node, item.path, ipldResolver),
@@ -45,7 +45,7 @@ module.exports = (hash, ipldResolver, options) => {
 
   // Traverse the DAG
   return pull(
-    ipldResolver.getStream(new CID(hash)),
+    ipldResolver._getStream(new CID(hash)),
     pull.map((node) => switchType(
       node,
       () => traverse.widthFirst({path: hash, hash}, visitor),
