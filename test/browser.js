@@ -1,5 +1,4 @@
 /* eslint-env mocha */
-/* global self */
 'use strict'
 
 const Store = require('idb-pull-blob-store')
@@ -8,9 +7,9 @@ const repoContext = require.context('buffer!./repo-example', true)
 const pull = require('pull-stream')
 
 const idb = self.indexedDB ||
-  self.mozIndexedDB ||
-  self.webkitIndexedDB ||
-  self.msIndexedDB
+        self.mozIndexedDB ||
+        self.webkitIndexedDB ||
+        self.msIndexedDB
 
 idb.deleteDatabase('ipfs')
 idb.deleteDatabase('ipfs/blocks')
