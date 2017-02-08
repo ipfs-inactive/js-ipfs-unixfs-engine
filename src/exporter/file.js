@@ -21,7 +21,7 @@ module.exports = (node, name, ipldResolver) => {
     return pull(
       pull.values(node.links),
       paramap((link, cb) => ipldResolver.get(new CID(link.multihash), cb)),
-      pull.asyncMap((result, cb) => cb(null, result.value))
+      pull.map((result) => result.value)
     )
   }
 
