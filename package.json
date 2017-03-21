@@ -61,7 +61,7 @@
     "ipld-resolver": "^0.8.0",
     "is-ipfs": "^0.3.0",
     "lodash": "^4.17.4",
-    "multihashes": "^0.3.2",
+    "multihashes": "^0.4.0",
     "pull-batch": "^1.0.0",
     "pull-cat": "^1.1.11",
     "pull-block": "^1.1.0",
