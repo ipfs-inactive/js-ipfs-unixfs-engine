@@ -1,14 +1,13 @@
 /* eslint-env mocha */
-/* global self */
 'use strict'
 
 const series = require('async/series')
 const IPFSRepo = require('ipfs-repo')
 
 const idb = self.indexedDB ||
-  self.mozIndexedDB ||
-  self.webkitIndexedDB ||
-  self.msIndexedDB
+        self.mozIndexedDB ||
+        self.webkitIndexedDB ||
+        self.msIndexedDB
 
 idb.deleteDatabase('ipfs')
 idb.deleteDatabase('ipfs/blocks')
