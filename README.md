@@ -135,7 +135,7 @@ In the second argument of the importer constructor you can specify the following
 * `reduceSingleLeafToSelf` (boolean, defaults to `false`): optimization for, when reducing a set of nodes with one node, reduce it to that node.
 * `dirBuilder` (object): the options for the directory builder
   * `hamt` (object): the options for the HAMT sharded directory builder
-    * bits (positive integer, defaults to `5`): the number of bits at each bucket of the HAMT
+    * bits (positive integer, defaults to `8`): the number of bits at each bucket of the HAMT
 
 ### Example Exporter
 
