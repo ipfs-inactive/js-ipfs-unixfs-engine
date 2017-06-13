@@ -6,12 +6,8 @@ chai.use(require('dirty-chai'))
 const expect = chai.expect
 const BlockService = require('ipfs-block-service')
 const IPLDResolver = require('ipld-resolver')
-const UnixFS = require('ipfs-unixfs')
-const bs58 = require('bs58')
-const pull = require('pull-stream')
-const zip = require('pull-zip')
-const CID = require('cids')
 const loadFixture = require('aegir/fixtures')
+const pull = require('pull-stream')
 const Buffer = require('safe-buffer').Buffer
 
 const unixFSEngine = require('./../src')
@@ -27,7 +23,6 @@ module.exports = (repo) => {
       const bs = new BlockService(repo)
       ipldResolver = new IPLDResolver(bs)
     })
-
 
     it('export a file 2 levels down', (done) => {
       const hash = 'QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN/level-1/200Bytes.txt'

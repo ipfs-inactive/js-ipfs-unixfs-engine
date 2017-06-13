@@ -2,7 +2,6 @@
 
 const pull = require('pull-stream')
 const CID = require('cids')
-const v = require('is-ipfs')
 const pullDefer = require('pull-defer')
 
 const resolve = require('./resolve').resolve
@@ -16,7 +15,7 @@ function pathBaseAndRest (path) {
     pathBase = (new CID(path)).toBaseEncodedString()
   }
 
-  if (typeof path === 'string') {
+  if (typeof path === 'string') {
     if (path.indexOf('/ipfs/') === 0) {
       path = path.substring(6)
     }

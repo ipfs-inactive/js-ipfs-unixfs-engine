@@ -337,7 +337,6 @@ module.exports = (repo) => {
 
       it('exports a big dir with subpath', (done) => {
         const exportHash = mh.toB58String(rootHash) + '/big/big/2000'
-        const entries = {}
         pull(
           exporter(exportHash, ipldResolver),
           pull.collect(collected)
@@ -345,7 +344,6 @@ module.exports = (repo) => {
 
         function collected (err, nodes) {
           expect(err).to.not.exist()
-          const paths = Object.keys(entries).sort()
           expect(nodes.length).to.equal(4)
           expect(nodes.map((node) => node.path)).to.deep.equal([
             'QmTm3ZdKxyDLvcEePEvGfB2QReXsiAF7f39yjRcWwWrA6d',
@@ -363,7 +361,6 @@ module.exports = (repo) => {
           )
         }
       })
-
     })
   })
 }
