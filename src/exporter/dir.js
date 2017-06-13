@@ -1,5 +1,7 @@
 'use strict'
 
+// TODO: REMOVE??
+
 const path = require('path')
 const pull = require('pull-stream')
 const paramap = require('pull-paramap')
@@ -12,7 +14,7 @@ const switchType = require('../util').switchType
 // Logic to export a unixfs directory.
 module.exports = dirExporter
 
-function dirExporter (node, name, ipldResolver) {
+function dirExporter (node, name, pathRest, ipldResolver) {
   // The algorithm below is as follows
   //
   // 1. Take all links from a given directory node
@@ -24,12 +26,16 @@ function dirExporter (node, name, ipldResolver) {
   //      - `file`: use the fileExporter to load and return the file
   // 4. Flatten
 
+  const accepts = pathRest.shift()
+
   return pull(
     pull.values(node.links),
     pull.map((link) => ({
+      linkName: link.name,
       path: path.join(name, link.name),
       hash: link.multihash
     })),
+    pull.filter((item) => accepts === undefined || item.linkName === accepts),
     paramap((item, cb) => ipldResolver.get(new CID(item.hash), (err, result) => {
       if (err) {
         return cb(err)
@@ -44,8 +50,8 @@ function dirExporter (node, name, ipldResolver) {
 
       cb(null, switchType(
         node,
-        () => cat([pull.values([dir]), dirExporter(node, item.path, ipldResolver)]),
-        () => fileExporter(node, item.path, ipldResolver)
+        () => cat([pull.values([dir]), dirExporter(node, item.path, pathRest, ipldResolver)]),
+        () => fileExporter(node, item.path, pathRest, ipldResolver)
       ))
     })),
     pull.flatten()

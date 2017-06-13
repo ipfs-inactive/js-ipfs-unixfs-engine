@@ -14,13 +14,14 @@ module.exports = Object.assign({
   typeOf: typeOf
 }, resolvers)
 
-function resolve (node, name, ipldResolver, parentNode) {
+function resolve (node, hash, pathRest, ipldResolver, parentNode) {
   const type = typeOf(node)
   const resolver = resolvers[type]
   if (!resolver) {
     return pull.error(new Error('Unkown node type ' + type))
   }
-  let stream = resolver(node, name, ipldResolver, resolve, parentNode)
+  // TODO: pass remaining path to filter output
+  let stream = resolver(node, hash, pathRest, ipldResolver, resolve, parentNode)
   return stream
 }
 

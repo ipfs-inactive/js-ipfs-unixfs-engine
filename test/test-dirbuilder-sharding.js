@@ -334,6 +334,36 @@ module.exports = (repo) => {
           }
         }
       })
+
+      it('exports a big dir with subpath', (done) => {
+        const exportHash = mh.toB58String(rootHash) + '/big/big/2000'
+        const entries = {}
+        pull(
+          exporter(exportHash, ipldResolver),
+          pull.collect(collected)
+        )
+
+        function collected (err, nodes) {
+          expect(err).to.not.exist()
+          const paths = Object.keys(entries).sort()
+          expect(nodes.length).to.equal(4)
+          expect(nodes.map((node) => node.path)).to.deep.equal([
+            'QmTm3ZdKxyDLvcEePEvGfB2QReXsiAF7f39yjRcWwWrA6d',
+            'QmTm3ZdKxyDLvcEePEvGfB2QReXsiAF7f39yjRcWwWrA6d/big',
+            'QmTm3ZdKxyDLvcEePEvGfB2QReXsiAF7f39yjRcWwWrA6d/big/big',
+            'QmTm3ZdKxyDLvcEePEvGfB2QReXsiAF7f39yjRcWwWrA6d/big/big/2000'
+          ])
+          pull(
+            nodes[3].content,
+            pull.collect((err, content) => {
+              expect(err).to.not.exist()
+              expect(content.toString()).to.equal('2000')
+              done()
+            })
+          )
+        }
+      })
+
     })
   })
 }
