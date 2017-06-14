@@ -6,7 +6,9 @@ chai.use(require('dirty-chai'))
 const expect = chai.expect
 const BlockService = require('ipfs-block-service')
 const IPLDResolver = require('ipld-resolver')
+const CID = require('cids')
 const loadFixture = require('aegir/fixtures')
+
 const pull = require('pull-stream')
 const Buffer = require('safe-buffer').Buffer
 
@@ -55,6 +57,28 @@ module.exports = (repo) => {
           done()
         })
       )
+    })
+
+    it('exports starting from non-protobuf node', (done) => {
+      const doc = { a: { file: new CID('QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN') } }
+      ipldResolver.put(doc, { format: 'dag-cbor' }, (err, cid) => {
+        expect(err).to.not.exist()
+        const nodeCID = cid.toBaseEncodedString()
+
+        pull(
+          exporter(nodeCID + '/a/file/level-1/200Bytes.txt', ipldResolver),
+          pull.collect((err, files) => {
+            expect(err).to.not.exist()
+            expect(files.length).to.equal(3)
+            expect(files[0].path).to.equal('zdpuAzp9okHgbLQdmusXn8cRjr9js6nAM4JrvKDeqp2XEkFzD/a/file')
+            expect(files[0].content).to.not.exist()
+            expect(files[1].path).to.equal('zdpuAzp9okHgbLQdmusXn8cRjr9js6nAM4JrvKDeqp2XEkFzD/a/file/level-1')
+            expect(files[1].content).to.not.exist()
+            expect(files[2].path).to.equal('zdpuAzp9okHgbLQdmusXn8cRjr9js6nAM4JrvKDeqp2XEkFzD/a/file/level-1/200Bytes.txt')
+            fileEql(files[2], smallFile, done)
+          })
+        )
+      })
     })
   })
 }

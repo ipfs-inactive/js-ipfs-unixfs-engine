@@ -6,7 +6,8 @@ const pull = require('pull-stream')
 const resolvers = {
   directory: require('./dir-flat'),
   'hamt-sharded-directory': require('./dir-hamt-sharded'),
-  file: require('./file')
+  file: require('./file'),
+  unknown: require('./unknown')
 }
 
 module.exports = Object.assign({
@@ -15,7 +16,12 @@ module.exports = Object.assign({
 }, resolvers)
 
 function resolve (node, hash, pathRest, ipldResolver, parentNode) {
-  const type = typeOf(node)
+  let type
+  try {
+    type = typeOf(node)
+  } catch (err) {
+    type = 'unknown'
+  }
   const resolver = resolvers[type]
   if (!resolver) {
     return pull.error(new Error('Unkown node type ' + type))
