@@ -26,6 +26,8 @@ module.exports = (node, name, pathRest, ipldResolver, resolve) => {
     } else {
       return pull.error('not found')
     }
+  } else {
+    return pull.error(new Error('invalid node type'))
   }
 }
 

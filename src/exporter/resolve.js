@@ -26,9 +26,7 @@ function resolve (node, hash, pathRest, ipldResolver, parentNode) {
   if (!resolver) {
     return pull.error(new Error('Unkown node type ' + type))
   }
-  // TODO: pass remaining path to filter output
-  let stream = resolver(node, hash, pathRest, ipldResolver, resolve, parentNode)
-  return stream
+  return resolver(node, hash, pathRest, ipldResolver, resolve, parentNode)
 }
 
 function typeOf (node) {
