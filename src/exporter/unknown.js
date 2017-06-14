@@ -5,7 +5,6 @@ const CID = require('cids')
 const pull = require('pull-stream')
 const pullDefer = require('pull-defer')
 
-// Logic to export a single (possibly chunked) unixfs file.
 module.exports = (node, name, pathRest, ipldResolver, resolve) => {
   let newNode
   if (pathRest.length) {
