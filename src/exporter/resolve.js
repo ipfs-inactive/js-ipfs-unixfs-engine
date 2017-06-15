@@ -7,7 +7,7 @@ const resolvers = {
   directory: require('./dir-flat'),
   'hamt-sharded-directory': require('./dir-hamt-sharded'),
   file: require('./file'),
-  unknown: require('./unknown')
+  object: require('./object')
 }
 
 module.exports = Object.assign({
@@ -16,12 +16,7 @@ module.exports = Object.assign({
 }, resolvers)
 
 function resolve (node, hash, pathRest, ipldResolver, parentNode) {
-  let type
-  try {
-    type = typeOf(node)
-  } catch (err) {
-    type = 'unknown'
-  }
+  const type = typeOf(node)
   const resolver = resolvers[type]
   if (!resolver) {
     return pull.error(new Error('Unkown node type ' + type))
@@ -30,6 +25,9 @@ function resolve (node, hash, pathRest, ipldResolver, parentNode) {
 }
 
 function typeOf (node) {
-  const data = UnixFS.unmarshal(node.data)
-  return data.type
+  if (Buffer.isBuffer(node.data)) {
+    return UnixFS.unmarshal(node.data).type
+  } else {
+    return 'object'
+  }
 }
