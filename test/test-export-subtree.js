@@ -33,13 +33,26 @@ module.exports = (repo) => {
         exporter(hash, ipldResolver),
         pull.collect((err, files) => {
           expect(err).to.not.exist()
+          expect(files.length).to.equal(1)
+          expect(files[0].path).to.equal('200Bytes.txt')
+          fileEql(files[0], smallFile, done)
+        })
+      )
+    })
+
+    it('export dir 1 level down', (done) => {
+      const hash = 'QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN/level-1'
+
+      pull(
+        exporter(hash, ipldResolver),
+        pull.collect((err, files) => {
+          console.log(files)
+          expect(err).to.not.exist()
           expect(files.length).to.equal(3)
-          expect(files[0].path).to.equal('QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN')
-          expect(files[0].content).to.not.exist()
-          expect(files[1].path).to.equal('QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN/level-1')
-          expect(files[1].content).to.not.exist()
-          expect(files[2].path).to.equal('QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN/level-1/200Bytes.txt')
-          fileEql(files[2], smallFile, done)
+          expect(files[0].path).to.equal('level-1')
+          expect(files[1].path).to.equal('level-1/200Bytes.txt')
+          expect(files[2].path).to.equal('level-1/level-2')
+          fileEql(files[1], smallFile, done)
         })
       )
     })
@@ -51,9 +64,7 @@ module.exports = (repo) => {
         exporter(hash, ipldResolver),
         pull.collect((err, files) => {
           expect(err).to.not.exist()
-          expect(files.length).to.equal(1)
-          expect(files[0].path).to.equal('QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN')
-          expect(files[0].content).to.not.exist()
+          expect(files.length).to.equal(0)
           done()
         })
       )
@@ -69,13 +80,9 @@ module.exports = (repo) => {
           exporter(nodeCID + '/a/file/level-1/200Bytes.txt', ipldResolver),
           pull.collect((err, files) => {
             expect(err).to.not.exist()
-            expect(files.length).to.equal(3)
-            expect(files[0].path).to.equal('zdpuAzp9okHgbLQdmusXn8cRjr9js6nAM4JrvKDeqp2XEkFzD/a/file')
-            expect(files[0].content).to.not.exist()
-            expect(files[1].path).to.equal('zdpuAzp9okHgbLQdmusXn8cRjr9js6nAM4JrvKDeqp2XEkFzD/a/file/level-1')
-            expect(files[1].content).to.not.exist()
-            expect(files[2].path).to.equal('zdpuAzp9okHgbLQdmusXn8cRjr9js6nAM4JrvKDeqp2XEkFzD/a/file/level-1/200Bytes.txt')
-            fileEql(files[2], smallFile, done)
+            expect(files.length).to.equal(1)
+            expect(files[0].path).to.equal('200Bytes.txt')
+            fileEql(files[0], smallFile, done)
           })
         )
       })

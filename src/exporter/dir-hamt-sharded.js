@@ -19,8 +19,7 @@ function shardedDirExporter (node, name, pathRest, ipldResolver, resolve, parent
     }]
   }
 
-  return cat([
-    pull.values(dir),
+  const streams = [
     pull(
       pull.values(node.links),
       pull.map((link) => {
@@ -28,12 +27,15 @@ function shardedDirExporter (node, name, pathRest, ipldResolver, resolve, parent
         const p = link.name.substring(2)
         const pp = p ? path.join(name, p) : name
         let accept = true
+        let fromPathRest = false
 
         if (p && pathRest.length) {
+          fromPathRest = true
           accept = (p === pathRest[0])
         }
         if (accept) {
           return {
+            fromPathRest: fromPathRest,
             name: p,
             path: pp,
             hash: link.multihash,
@@ -49,9 +51,22 @@ function shardedDirExporter (node, name, pathRest, ipldResolver, resolve, parent
           return cb(err)
         }
 
-        cb(null, resolve(n.value, item.path, item.pathRest, ipldResolver, (dir && dir[0]) || parent))
+        cb(
+          null,
+          resolve(
+            n.value,
+            item.fromPathRest ? item.name : item.path,
+            item.pathRest,
+            ipldResolver,
+            (dir && dir[0]) || parent))
       })),
       pull.flatten()
     )
-  ])
+  ]
+
+  if (!pathRest.length) {
+    streams.unshift(pull.values(dir))
+  }
+
+  return cat(streams)
 }

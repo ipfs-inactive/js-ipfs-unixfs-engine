@@ -10,15 +10,14 @@ const cat = require('pull-cat')
 module.exports = dirExporter
 
 function dirExporter (node, name, pathRest, ipldResolver, resolve, parent) {
-  const accepts = pathRest.shift()
+  const accepts = pathRest[0]
 
   const dir = {
     path: name,
     hash: node.multihash
   }
 
-  return cat([
-    pull.values([dir]),
+  const streams = [
     pull(
       pull.values(node.links),
       pull.map((link) => ({
@@ -32,9 +31,18 @@ function dirExporter (node, name, pathRest, ipldResolver, resolve, parent) {
           return cb(err)
         }
 
-        cb(null, resolve(n.value, item.path, pathRest, ipldResolver, name, parent))
+        cb(null, resolve(n.value, accepts || item.path, pathRest, ipldResolver, name, parent))
       })),
       pull.flatten()
     )
-  ])
+  ]
+
+  // place dir before if not specifying subtree
+  if (!pathRest.length) {
+    streams.unshift(pull.values([dir]))
+  }
+
+  pathRest.shift()
+
+  return cat(streams)
 }

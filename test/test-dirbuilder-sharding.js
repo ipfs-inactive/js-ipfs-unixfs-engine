@@ -344,15 +344,12 @@ module.exports = (repo) => {
 
         function collected (err, nodes) {
           expect(err).to.not.exist()
-          expect(nodes.length).to.equal(4)
+          expect(nodes.length).to.equal(1)
           expect(nodes.map((node) => node.path)).to.deep.equal([
-            'QmTm3ZdKxyDLvcEePEvGfB2QReXsiAF7f39yjRcWwWrA6d',
-            'QmTm3ZdKxyDLvcEePEvGfB2QReXsiAF7f39yjRcWwWrA6d/big',
-            'QmTm3ZdKxyDLvcEePEvGfB2QReXsiAF7f39yjRcWwWrA6d/big/big',
-            'QmTm3ZdKxyDLvcEePEvGfB2QReXsiAF7f39yjRcWwWrA6d/big/big/2000'
+            '2000'
           ])
           pull(
-            nodes[3].content,
+            nodes[0].content,
             pull.collect((err, content) => {
               expect(err).to.not.exist()
               expect(content.toString()).to.equal('2000')
