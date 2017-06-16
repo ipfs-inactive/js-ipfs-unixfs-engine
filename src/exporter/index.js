@@ -17,7 +17,7 @@ function pathBaseAndRest (path) {
 
   if (typeof path === 'string') {
     if (path.indexOf('/ipfs/') === 0) {
-      path = path.substring(6)
+      path = pathBase = path.substring(6)
     }
     const subtreeStart = path.indexOf('/')
     if (subtreeStart > 0) {
