@@ -93,7 +93,10 @@ module.exports = function (createChunker, ipldResolver, createReducer, _options)
     pull(
       file.content,
       createChunker(options.chunkerOptions),
-      pull.map(chunk => new Buffer(chunk)),
+      pull.map(chunk => {
+        if (options.progress) options.progress(chunk.byteLength)
+        return new Buffer(chunk)
+      }),
       pull.map(buffer => new UnixFS('file', buffer)),
       pull.asyncMap((fileNode, callback) => {
         DAGNode.create(fileNode.marshal(), (err, node) => {
