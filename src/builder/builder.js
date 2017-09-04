@@ -60,6 +60,8 @@ module.exports = function (createChunker, ipldResolver, createReducer, _options)
     waterfall([
       (cb) => DAGNode.create(d.marshal(), [], options.hashAlg, cb),
       (node, cb) => {
+        if (options['only-hash']) return cb(null, node)
+
         ipldResolver.put(node, {
           cid: new CID(node.multihash)
         }, (err) => cb(err, node))
@@ -101,6 +103,8 @@ module.exports = function (createChunker, ipldResolver, createReducer, _options)
         })
       }),
       pull.asyncMap((leaf, callback) => {
+        if (options['only-hash']) return callback(null, leaf)
+
         ipldResolver.put(leaf.DAGNode, {
           cid: new CID(leaf.DAGNode.multihash)
         }, (err) => callback(err, leaf)
