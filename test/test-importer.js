@@ -428,7 +428,7 @@ module.exports = (repo) => {
           }]),
           importer(ipldResolver, options),
           pull.collect(() => {
-            expect(options.progress.called).to.be.true
+            expect(options.progress.called).to.equal(true)
             expect(options.progress.args[0][0]).to.equal(1024)
             done()
           })
@@ -444,7 +444,7 @@ module.exports = (repo) => {
           }]),
           importer(ipldResolver, options),
           pull.collect(() => {
-            expect(options.progress.notCalled).to.be.true
+            expect(options.progress.notCalled).to.equal(true)
             done()
           })
         )
