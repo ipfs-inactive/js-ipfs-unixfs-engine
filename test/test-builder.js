@@ -9,6 +9,8 @@ const pull = require('pull-stream')
 const mh = require('multihashes')
 const IPLDResolver = require('ipld-resolver')
 const eachSeries = require('async').eachSeries
+const CID = require('cids')
+const UnixFS = require('ipfs-unixfs')
 const createBuilder = require('../src/builder')
 const FixedSizeChunker = require('../src/chunker/fixed-size')
 
@@ -25,19 +27,33 @@ module.exports = (repo) => {
       eachSeries(Object.keys(mh.names), (hashAlg, cb) => {
         const options = { hashAlg, strategy: 'flat' }
         const content = String(Math.random() + Date.now())
+        const inputFile = {
+          path: content + '.txt',
+          content: Buffer.from(content)
+        }
+
+        const onCollected = (err, nodes) => {
+          if (err) return cb(err)
+
+          const node = nodes[0]
+          expect(node).to.exist()
+
+          // Verify multihash has been encoded using hashAlg
+          expect(mh.decode(node.multihash).name).to.equal(hashAlg)
+
+          // Fetch using hashAlg encoded multihash
+          ipldResolver.get(new CID(node.multihash), (err, res) => {
+            if (err) return cb(err)
+            const content = UnixFS.unmarshal(res.value.data).data
+            expect(content.equals(inputFile.content)).to.be.true()
+            cb()
+          })
+        }
 
         pull(
-          pull.values([{
-            path: content + '.txt',
-            content: Buffer.from(content)
-          }]),
+          pull.values([inputFile]),
           createBuilder(FixedSizeChunker, ipldResolver, options),
-          pull.collect((err, nodes) => {
-            expect(err).to.not.exist()
-            expect(nodes.length).to.equal(1)
-            expect(mh.decode(nodes[0].multihash).name).to.equal(hashAlg)
-            cb(err)
-          })
+          pull.collect(onCollected)
         )
       }, done)
     })
