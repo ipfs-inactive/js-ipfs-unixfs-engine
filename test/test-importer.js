@@ -7,6 +7,7 @@ const extend = require('deep-extend')
 const chai = require('chai')
 chai.use(require('dirty-chai'))
 const expect = chai.expect
+const sinon = require('sinon')
 const BlockService = require('ipfs-block-service')
 const pull = require('pull-stream')
 const mh = require('multihashes')
@@ -416,6 +417,37 @@ module.exports = (repo) => {
             expect(file.size).to.be.eql(dir.size)
           }
         }
+      })
+
+      it('will call a progress function', (done) => {
+        options.progress = sinon.spy()
+        pull(
+          pull.values([{
+            path: '1.2MiB.txt',
+            content: pull.values([bigFile])
+          }]),
+          importer(ipldResolver, options),
+          pull.collect(() => {
+            expect(options.progress.called).to.be.true
+            expect(options.progress.args[0][0]).to.equal(1024)
+            done()
+          })
+        )
+      })
+
+      it('only if it is passed', (done) => {
+        options.progress = false
+        pull(
+          pull.values([{
+            path: '200Bytes.txt',
+            content: pull.values([smallFile])
+          }]),
+          importer(ipldResolver, options),
+          pull.collect(() => {
+            expect(options.progress.notCalled).to.be.true
+            done()
+          })
+        )
       })
     })
   })
