@@ -419,8 +419,9 @@ module.exports = (repo) => {
         }
       })
 
-      it('will call a progress function', (done) => {
+      it('will call an optional progress function', (done) => {
         options.progress = sinon.spy()
+
         pull(
           pull.values([{
             path: '1.2MiB.txt',
@@ -430,21 +431,6 @@ module.exports = (repo) => {
           pull.collect(() => {
             expect(options.progress.called).to.equal(true)
             expect(options.progress.args[0][0]).to.equal(1024)
-            done()
-          })
-        )
-      })
-
-      it('only if it is passed', (done) => {
-        options.progress = false
-        pull(
-          pull.values([{
-            path: '200Bytes.txt',
-            content: pull.values([smallFile])
-          }]),
-          importer(ipldResolver, options),
-          pull.collect(() => {
-            expect(options.progress.notCalled).to.equal(true)
             done()
           })
         )
