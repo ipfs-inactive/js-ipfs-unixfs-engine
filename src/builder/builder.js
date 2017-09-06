@@ -57,10 +57,12 @@ module.exports = function (createChunker, ipldResolver, createReducer, _options)
     // 2. write it to the dag store
 
     const d = new UnixFS('directory')
+
     waterfall([
       (cb) => DAGNode.create(d.marshal(), [], options.hashAlg, cb),
       (node, cb) => {
-        if (options['only-hash']) return cb(null, node)
+        console.log('createAndStoreDir', options.onlyHash)
+        if (options.onlyHash) return cb(null, node)
 
         ipldResolver.put(node, {
           cid: new CID(node.multihash)
@@ -103,7 +105,7 @@ module.exports = function (createChunker, ipldResolver, createReducer, _options)
         })
       }),
       pull.asyncMap((leaf, callback) => {
-        if (options['only-hash']) return callback(null, leaf)
+        if (options.onlyHash) return callback(null, leaf)
 
         ipldResolver.put(leaf.DAGNode, {
           cid: new CID(leaf.DAGNode.multihash)
