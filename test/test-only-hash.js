@@ -20,7 +20,7 @@ module.exports = (repo) => {
       ipldResolver = new IPLDResolver(bs)
     })
 
-    it('will only chunk and hash if passed an --only-hash option', (done) => {
+    it('will only chunk and hash if passed an "onlyHash" option', (done) => {
       const onCollected = (err, nodes) => {
         if (err) return done(err)
 

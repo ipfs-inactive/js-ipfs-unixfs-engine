@@ -419,7 +419,7 @@ module.exports = (repo) => {
         }
       })
 
-      it.only('will not write to disk if passed --only-hash option', (done) => {
+      it('will not write to disk if passed "onlyHash" option', (done) => {
         const content = String(Math.random() + Date.now())
         const inputFile = {
           path: content + '.txt',

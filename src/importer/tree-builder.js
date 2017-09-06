@@ -15,7 +15,7 @@ module.exports = createTreeBuilder
 const defaultOptions = {
   wrap: false,
   shardSplitThreshold: 1000,
-  onlyHash: true
+  onlyHash: false
 }
 
 function createTreeBuilder (ipldResolver, _options) {
