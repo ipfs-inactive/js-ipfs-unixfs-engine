@@ -29,7 +29,6 @@ module.exports = (repo) => {
 
         ipldResolver.get(new CID(node.multihash), (err, res) => {
           expect(err).to.exist()
-          expect(err.code).to.equal('ENOENT')
           done()
         })
       }

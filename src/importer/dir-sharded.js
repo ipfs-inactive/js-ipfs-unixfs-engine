@@ -146,7 +146,7 @@ function flush (options, bucket, path, ipldResolver, source, callback) {
       [
         (callback) => DAGNode.create(dir.marshal(), links, callback),
         (node, callback) => {
-          if (this._options.onlyHash) return callback(null, node)
+          if (options.onlyHash) return callback(null, node)
 
           ipldResolver.put(
             node,
