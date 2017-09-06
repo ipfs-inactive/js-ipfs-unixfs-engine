@@ -61,7 +61,6 @@ module.exports = function (createChunker, ipldResolver, createReducer, _options)
     waterfall([
       (cb) => DAGNode.create(d.marshal(), [], options.hashAlg, cb),
       (node, cb) => {
-        console.log('createAndStoreDir', options.onlyHash)
         if (options.onlyHash) return cb(null, node)
 
         ipldResolver.put(node, {

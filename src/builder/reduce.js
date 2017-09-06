@@ -34,7 +34,6 @@ module.exports = function (file, ipldResolver, options) {
     waterfall([
       (cb) => DAGNode.create(f.marshal(), links, cb),
       (node, cb) => {
-        console.log('reducer', options.onlyHash)
         if (options.onlyHash) return cb(null, node)
 
         ipldResolver.put(node, {
