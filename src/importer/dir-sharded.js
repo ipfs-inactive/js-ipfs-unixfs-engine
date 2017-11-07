@@ -24,7 +24,7 @@ const hashFn = function (value, callback) {
       // for parity..
       const justHash = hash.slice(2, 10)
       const length = justHash.length
-      const result = Buffer.from(length)
+      const result = Buffer.alloc(length)
       // TODO: invert buffer because that's how Go impl does it
       for (let i = 0; i < length; i++) {
         result[length - i - 1] = justHash[i]
