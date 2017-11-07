@@ -21,7 +21,7 @@ const options = {
   hashFn: hashFn
 }
 
-describe.only('HAMT', () => {
+describe('HAMT', () => {
   describe('basic', () => {
     let bucket
     it('can create an empty one', () => {
@@ -43,7 +43,7 @@ describe.only('HAMT', () => {
     it('can get that value', (callback) => {
       bucket.get('key', (err, result) => {
         expect(err).to.not.exist()
-        expect(result).to.be.eql('value')
+        expect(result).to.eql('value')
         callback()
       })
     })
@@ -55,7 +55,7 @@ describe.only('HAMT', () => {
     it('can get that value', (callback) => {
       bucket.get('key', (err, result) => {
         expect(err).to.not.exist()
-        expect(result).to.be.eql('a different value')
+        expect(result).to.eql('a different value')
         callback()
       })
     })

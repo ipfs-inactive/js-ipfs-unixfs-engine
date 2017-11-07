@@ -160,7 +160,9 @@ module.exports = (repo) => {
 
     const expected = extend({}, defaultResults, strategies[strategy])
 
-    describe(strategy + ' importer', () => {
+    describe(strategy + ' importer', function () {
+      this.timeout(20 * 1000)
+
       let ipldResolver
 
       const options = {
