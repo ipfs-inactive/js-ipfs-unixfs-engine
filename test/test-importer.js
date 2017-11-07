@@ -108,7 +108,7 @@ const strategyOverrides = {
 }
 
 module.exports = (repo) => {
-  strategies.forEach(strategy => {
+  strategies.forEach((strategy) => {
     const baseFiles = strategyBaseFiles[strategy]
     const defaultResults = extend({}, baseFiles, {
       'foo/bar/200Bytes.txt': extend({}, baseFiles['200Bytes.txt'], {
