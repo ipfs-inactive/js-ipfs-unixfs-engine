@@ -13,6 +13,8 @@ const pull = require('pull-stream')
 const mh = require('multihashes')
 const loadFixture = require('aegir/fixtures')
 const IPFS = require('ipfs')
+const os = require('os')
+const path = require('path')
 
 function stringifyMh (files) {
   return files.map((file) => {
@@ -171,13 +173,15 @@ describe('with dag-api', () => {
         }
       }
 
-      before((done) => {
+      before(function (done) {
+        this.timeout(20 * 1000)
+
         node = new IPFS({
-          repo: '/tmp/unixfs-test-' + Math.random(),
+          repo: path.join(os.tmpdir(), 'unixfs-test-' + Math.random()),
           start: false
         })
 
-        node.on('ready', done)
+        node.on('ready', err => { if (err) console.log('ready', err); done(err) })
       })
 
       it('fails on bad input', (done) => {
