@@ -48,7 +48,8 @@ describe('IPFS data importing tests on the Browser', function () {
   require('./builder-balanced')
   require('./builder-trickle-dag')
   require('./builder-only-hash')(repo)
-  require('./builder-dir-sharding')(repo)
+  // TODO: make these tests not require data on the repo
+  // require('./builder-dir-sharding')(repo)
 
   // Importer
   require('./importer')(repo)
