@@ -181,7 +181,7 @@ describe('with dag-api', () => {
           start: false
         })
 
-        node.on('ready', err => { if (err) console.log('ready', err); done(err) })
+        node.on('ready', done)
       })
 
       it('fails on bad input', (done) => {
