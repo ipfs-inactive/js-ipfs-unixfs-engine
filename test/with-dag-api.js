@@ -107,7 +107,8 @@ const strategyOverrides = {
 
 }
 
-describe('with dag-api', () => {
+// TODO: waiting for IPFS support on windows, https://github.com/ipfs/js-ipfs-unixfs-engine/issues/196
+describe.skip('with dag-api', () => {
   strategies.forEach(strategy => {
     const baseFiles = strategyBaseFiles[strategy]
     const defaultResults = extend({}, baseFiles, {
