@@ -117,8 +117,8 @@ module.exports = (repo) => {
       pull(
         exporter(hash, ipldResolver),
         pull.collect((err, files) => {
-          files.forEach(file => expect(file).to.have.property('hash'))
           expect(err).to.not.exist()
+          files.forEach(file => expect(file).to.have.property('hash'))
 
           expect(
             files.map((file) => file.path)

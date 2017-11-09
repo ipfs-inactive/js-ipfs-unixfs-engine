@@ -1,7 +1,6 @@
 'use strict'
 
 const pull = require('pull-stream')
-const paramap = require('pull-paramap')
 const CID = require('cids')
 const cat = require('pull-cat')
 const cleanHash = require('./clean-multihash')
@@ -9,7 +8,7 @@ const cleanHash = require('./clean-multihash')
 // Logic to export a unixfs directory.
 module.exports = shardedDirExporter
 
-function shardedDirExporter (node, name, pathRest, ipldResolver, resolve, parent) {
+function shardedDirExporter (node, name, pathRest, resolve, dag, parent) {
   let dir
   if (!parent || parent.path !== name) {
     dir = [{
@@ -37,29 +36,16 @@ function shardedDirExporter (node, name, pathRest, ipldResolver, resolve, parent
             fromPathRest: fromPathRest,
             name: p,
             path: pp,
-            hash: link.multihash,
-            pathRest: p ? pathRest.slice(1) : pathRest
+            multihash: link.multihash,
+            pathRest: p ? pathRest.slice(1) : pathRest,
+            parent: (dir && dir[0]) || parent
           }
         } else {
           return ''
         }
       }),
       pull.filter(Boolean),
-      paramap((item, cb) => ipldResolver.get(new CID(item.hash), (err, n) => {
-        if (err) {
-          return cb(err)
-        }
-
-        cb(
-          null,
-          resolve(
-            n.value,
-            item.fromPathRest ? item.name : item.path,
-            item.pathRest,
-            ipldResolver,
-            (dir && dir[0]) || parent))
-      })),
-      pull.flatten()
+      resolve
     )
   ]
 
