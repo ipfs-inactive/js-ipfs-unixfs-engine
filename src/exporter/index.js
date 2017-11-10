@@ -57,17 +57,22 @@ module.exports = (path, dag, _options) => {
       multihash: new CID(dPath.base),
       name: dPath.base,
       path: dPath.base,
-      pathRest: dPath.rest
+      pathRest: dPath.rest,
+      depth: 0
     }]),
     createResolver(dag, options),
-    pull.map((node) => ({
-      name: node.name,
-      path: finalPathFor(node),
-      size: node.size,
-      hash: node.hash || node.multihash,
-      content: node.content,
-      type: node.type
-    }))
+    pull.filter(Boolean),
+    pull.map((node) => {
+      return {
+        depth: node.depth,
+        name: node.name,
+        path: finalPathFor(node),
+        size: node.size,
+        hash: node.hash || node.multihash,
+        content: node.content,
+        type: node.type
+      }
+    })
   )
 
   function finalPathFor (node) {

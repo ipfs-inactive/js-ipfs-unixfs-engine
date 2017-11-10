@@ -3,18 +3,20 @@
 const CID = require('cids')
 const pull = require('pull-stream')
 
-module.exports = (node, name, pathRest, resolve, dag, parent) => {
+module.exports = (node, name, path, pathRest, resolve, dag, parent, depth) => {
   let newNode
   if (pathRest.length) {
     const pathElem = pathRest[0]
     newNode = node[pathElem]
-    const newName = name + '/' + pathElem
+    const newName = path + '/' + pathElem
     if (!newNode) {
       return pull.error('not found')
     }
     const isCID = CID.isCID(newNode)
     return pull(
       pull.values([{
+        depth: depth,
+        name: pathElem,
         path: newName,
         pathRest: pathRest.slice(1),
         multihash: isCID && newNode,

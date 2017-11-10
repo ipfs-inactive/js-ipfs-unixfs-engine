@@ -7,13 +7,16 @@ const cleanHash = require('./clean-multihash')
 // Logic to export a unixfs directory.
 module.exports = shardedDirExporter
 
-function shardedDirExporter (node, path, pathRest, resolve, dag, parent) {
+function shardedDirExporter (node, name, path, pathRest, resolve, dag, parent, depth) {
   let dir
-  if (!parent || parent.path !== path) {
-    dir = [{
+  if (!parent || (parent.path !== path)) {
+    dir = {
+      name: name,
+      depth: depth,
       path: path,
-      hash: cleanHash(node.multihash)
-    }]
+      hash: cleanHash(node.multihash),
+      type: 'dir'
+    }
   }
 
   const streams = [
@@ -24,20 +27,18 @@ function shardedDirExporter (node, path, pathRest, resolve, dag, parent) {
         const p = link.name.substring(2)
         const pp = p ? path + '/' + p : path
         let accept = true
-        let fromPathRest = false
 
         if (p && pathRest.length) {
-          fromPathRest = true
           accept = (p === pathRest[0])
         }
         if (accept) {
           return {
-            fromPathRest: fromPathRest,
+            depth: depth + 1,
             name: p,
             path: pp,
             multihash: link.multihash,
             pathRest: p ? pathRest.slice(1) : pathRest,
-            parent: (dir && dir[0]) || parent
+            parent: dir || parent
           }
         } else {
           return ''
@@ -49,7 +50,7 @@ function shardedDirExporter (node, path, pathRest, resolve, dag, parent) {
   ]
 
   if (!pathRest.length) {
-    streams.unshift(pull.values(dir))
+    streams.unshift(pull.values([dir]))
   }
 
   return cat(streams)
