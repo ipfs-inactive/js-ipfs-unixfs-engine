@@ -155,7 +155,7 @@ module.exports = (repo) => {
       const hash = 'QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN'
 
       pull(
-        exporter(hash, ipldResolver, { maxDepth: 1}),
+        exporter(hash, ipldResolver, { maxDepth: 1 }),
         pull.collect((err, files) => {
           expect(err).to.not.exist()
           files.forEach(file => expect(file).to.have.property('hash'))
