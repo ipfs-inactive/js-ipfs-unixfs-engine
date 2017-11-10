@@ -15,6 +15,7 @@ function shardedDirExporter (node, name, path, pathRest, resolve, dag, parent, d
       depth: depth,
       path: path,
       hash: cleanHash(node.multihash),
+      size: node.size,
       type: 'dir'
     }
   }

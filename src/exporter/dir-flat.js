@@ -14,6 +14,7 @@ function dirExporter (node, name, path, pathRest, resolve, dag, parent, depth) {
     depth: depth,
     path: path,
     hash: node.multihash,
+    size: node.size,
     type: 'dir'
   }
 
