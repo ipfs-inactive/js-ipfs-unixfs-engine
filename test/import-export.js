@@ -33,7 +33,7 @@ function fileEql (f1, fileData, callback) {
 }
 
 module.exports = (repo) => {
-  describe('import and export', function() {
+  describe('import and export', function () {
     this.timeout(30 * 1000)
 
     strategies.forEach((strategy) => {
