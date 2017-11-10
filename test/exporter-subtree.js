@@ -38,7 +38,7 @@ module.exports = (repo) => {
           fileEql(files[0], smallFile, done)
         })
       )
-    }).timeout(10 * 1000)
+    })
 
     it('export dir 1 level down', (done) => {
       const hash = 'QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN/level-1'
