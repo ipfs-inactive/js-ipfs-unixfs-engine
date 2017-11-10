@@ -46,7 +46,7 @@
     "dirty-chai": "^2.0.1",
     "ipfs": "~0.26.0",
     "ipfs-block-service": "~0.13.0",
-    "ipfs-repo": "~0.18.3",
+    "ipfs-repo": "0.18.2",
     "ncp": "^2.0.0",
     "pre-commit": "^1.2.2",
     "pull-generate": "^2.2.0",
