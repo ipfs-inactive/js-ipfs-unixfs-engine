@@ -2,7 +2,6 @@
 
 const pull = require('pull-stream')
 const CID = require('cids')
-const b58Encode = require('bs58').encode
 
 const createResolver = require('./resolve').createResolver
 
@@ -37,11 +36,10 @@ function pathBaseAndRest (path) {
 }
 
 const defaultOptions = {
-  recurse: true
+  maxDepth: Infinity
 }
 
 module.exports = (path, dag, _options) => {
-
   const options = Object.assign({}, defaultOptions, _options)
 
   let dPath
@@ -50,6 +48,9 @@ module.exports = (path, dag, _options) => {
   } catch (err) {
     return pull.error(err)
   }
+
+  const pathLengthToCut = join(
+    [dPath.base].concat(dPath.rest.slice(0, dPath.rest.length - 1))).length
 
   return pull(
     pull.values([{
@@ -60,21 +61,21 @@ module.exports = (path, dag, _options) => {
     }]),
     createResolver(dag, options),
     pull.map((node) => ({
+      name: node.name,
       path: finalPathFor(node),
       size: node.size,
-      hash: node.hash,
-      content: node.content
+      hash: node.hash || node.multihash,
+      content: node.content,
+      type: node.type
     }))
   )
 
-  function finalPathFor(node) {
+  function finalPathFor (node) {
     if (!dPath.rest.length) {
       return node.path
     }
 
-    const cutElements = [dPath.base].concat(dPath.rest.slice(0, dPath.rest.length - 1))
-    const lengthToCut = join(cutElements).length
-    let retPath = node.path.substring(lengthToCut)
+    let retPath = node.path.substring(pathLengthToCut)
     if (retPath.charAt(0) === '/') {
       retPath = retPath.substring(1)
     }
@@ -85,7 +86,7 @@ module.exports = (path, dag, _options) => {
   }
 }
 
-function join(paths) {
+function join (paths) {
   return paths.reduce((acc, path) => {
     if (acc.length) {
       acc += '/'

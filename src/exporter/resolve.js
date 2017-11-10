@@ -18,11 +18,11 @@ module.exports = Object.assign({
 }, resolvers)
 
 function createResolver (dag, options, depth, parent) {
-  if (! depth) {
+  if (!depth) {
     depth = 0
   }
 
-  if (!options.recurse && depth > 0) {
+  if (depth > options.maxDepth) {
     return pull.map(identity)
   }
 
@@ -42,14 +42,14 @@ function createResolver (dag, options, depth, parent) {
     pull.flatten()
   )
 
-  function resolve (node, hash, pathRest, parentNode) {
+  function resolve (node, path, pathRest, parentNode) {
     const type = typeOf(node)
     const nodeResolver = resolvers[type]
     if (!nodeResolver) {
       return pull.error(new Error('Unkown node type ' + type))
     }
     const resolveDeep = createResolver(dag, options, depth + 1, node)
-    return nodeResolver(node, hash, pathRest, resolveDeep, dag, parentNode)
+    return nodeResolver(node, path, pathRest, resolveDeep, dag, parentNode)
   }
 }
 

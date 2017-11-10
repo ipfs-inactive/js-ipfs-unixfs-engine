@@ -17,7 +17,7 @@ const smallFile = loadFixture(__dirname, 'fixtures/200Bytes.txt')
 
 module.exports = (repo) => {
   describe('exporter subtree', () => {
-    this.timeout(10 * 1000)
+    // this.timeout(10 * 1000)
 
     let ipldResolver
 

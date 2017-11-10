@@ -1,18 +1,17 @@
 'use strict'
 
 const pull = require('pull-stream')
-const CID = require('cids')
 const cat = require('pull-cat')
 const cleanHash = require('./clean-multihash')
 
 // Logic to export a unixfs directory.
 module.exports = shardedDirExporter
 
-function shardedDirExporter (node, name, pathRest, resolve, dag, parent) {
+function shardedDirExporter (node, path, pathRest, resolve, dag, parent) {
   let dir
-  if (!parent || parent.path !== name) {
+  if (!parent || parent.path !== path) {
     dir = [{
-      path: name,
+      path: path,
       hash: cleanHash(node.multihash)
     }]
   }
@@ -23,7 +22,7 @@ function shardedDirExporter (node, name, pathRest, resolve, dag, parent) {
       pull.map((link) => {
         // remove the link prefix (2 chars for the bucket index)
         const p = link.name.substring(2)
-        const pp = p ? name + '/' + p : name
+        const pp = p ? path + '/' + p : path
         let accept = true
         let fromPathRest = false
 

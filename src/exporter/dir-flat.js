@@ -1,17 +1,16 @@
 'use strict'
 
 const pull = require('pull-stream')
-const CID = require('cids')
 const cat = require('pull-cat')
 
 // Logic to export a unixfs directory.
 module.exports = dirExporter
 
-function dirExporter (node, name, pathRest, resolve) {
+function dirExporter (node, path, pathRest, resolve) {
   const accepts = pathRest[0]
 
   const dir = {
-    path: name,
+    path: path,
     hash: node.multihash
   }
 
@@ -19,7 +18,9 @@ function dirExporter (node, name, pathRest, resolve) {
     pull(
       pull.values(node.links),
       pull.map((link) => ({
-        path: name + '/' + link.name,
+        size: link.size,
+        name: link.name,
+        path: path + '/' + link.name,
         multihash: link.multihash,
         linkName: link.name,
         pathRest: pathRest.slice(1)

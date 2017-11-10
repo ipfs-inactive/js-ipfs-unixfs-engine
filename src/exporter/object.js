@@ -26,7 +26,3 @@ module.exports = (node, name, pathRest, resolve, dag, parent) => {
     return pull.error(new Error('invalid node type'))
   }
 }
-
-function sanitizeCID (cid) {
-  return new CID(cid.version, cid.codec, cid.multihash)
-}
