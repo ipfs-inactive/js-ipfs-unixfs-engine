@@ -107,8 +107,12 @@ const strategyOverrides = {
 
 }
 
-// TODO: waiting for IPFS support on windows, https://github.com/ipfs/js-ipfs-unixfs-engine/issues/196
-describe.skip('with dag-api', () => {
+describe('with dag-api', function() {
+  // TODO: waiting for IPFS support on windows, https://github.com/ipfs/js-ipfs-unixfs-engine/issues/196
+  if (os.platform() === 'win32') {
+    return this.skip();
+  }
+
   strategies.forEach(strategy => {
     const baseFiles = strategyBaseFiles[strategy]
     const defaultResults = extend({}, baseFiles, {
