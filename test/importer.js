@@ -311,7 +311,7 @@ module.exports = (repo) => {
             done()
           })
         )
-      })
+      }).timeout(60 * 1000)
 
       it('file bigger than a single chunk inside a dir', (done) => {
         pull(
@@ -331,7 +331,7 @@ module.exports = (repo) => {
             done()
           })
         )
-      })
+      }).timeout(60 * 1000)
 
       it('empty directory', (done) => {
         pull(
