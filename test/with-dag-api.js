@@ -107,7 +107,7 @@ const strategyOverrides = {
 
 }
 
-describe('with dag-api', function() {
+describe('with dag-api', function () {
   // TODO: waiting for IPFS support on windows, https://github.com/ipfs/js-ipfs-unixfs-engine/issues/196
   if (os.platform() === 'win32') {
     return
