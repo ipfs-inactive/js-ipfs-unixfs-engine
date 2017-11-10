@@ -151,6 +151,42 @@ module.exports = (repo) => {
       )
     }).timeout(30 * 1000)
 
+    it('export a directory one deep', (done) => {
+      const hash = 'QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN'
+
+      pull(
+        exporter(hash, ipldResolver, { maxDepth: 1}),
+        pull.collect((err, files) => {
+          expect(err).to.not.exist()
+          files.forEach(file => expect(file).to.have.property('hash'))
+
+          expect(
+            files.map((file) => file.path)
+          ).to.be.eql([
+            'QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN',
+            'QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN/200Bytes.txt',
+            'QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN/dir-another',
+            'QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN/level-1'
+          ])
+
+          pull(
+            pull.values(files),
+            pull.map((file) => Boolean(file.content)),
+            pull.collect((err, contents) => {
+              expect(err).to.not.exist()
+              expect(contents).to.be.eql([
+                false,
+                true,
+                false,
+                false
+              ])
+              done()
+            })
+          )
+        })
+      )
+    }).timeout(30 * 1000)
+
     it('returns an empty stream for dir', (done) => {
       const hash = 'QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn'
 
