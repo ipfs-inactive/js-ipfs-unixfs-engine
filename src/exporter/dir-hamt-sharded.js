@@ -7,7 +7,7 @@ const cleanHash = require('./clean-multihash')
 // Logic to export a unixfs directory.
 module.exports = shardedDirExporter
 
-function shardedDirExporter (node, name, path, pathRest, resolve, dag, parent, depth) {
+function shardedDirExporter (node, name, path, pathRest, resolve, size, dag, parent, depth) {
   let dir
   if (!parent || (parent.path !== path)) {
     dir = {

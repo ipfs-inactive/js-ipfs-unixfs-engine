@@ -48,17 +48,17 @@ function createResolver (dag, options, depth, parent) {
   )
 
   function resolveItem (node, item) {
-    return resolve(node, item.name, item.path, item.pathRest, dag, item.parent || parent, item.depth)
+    return resolve(node, item.name, item.path, item.pathRest, item.size, dag, item.parent || parent, item.depth)
   }
 
-  function resolve (node, name, path, pathRest, dag, parentNode, depth) {
+  function resolve (node, name, path, pathRest, size, dag, parentNode, depth) {
     const type = typeOf(node)
     const nodeResolver = resolvers[type]
     if (!nodeResolver) {
       return pull.error(new Error('Unkown node type ' + type))
     }
     const resolveDeep = createResolver(dag, options, depth, node)
-    return nodeResolver(node, name, path, pathRest, resolveDeep, dag, parentNode, depth)
+    return nodeResolver(node, name, path, pathRest, resolveDeep, size, dag, parentNode, depth)
   }
 }
 

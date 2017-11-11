@@ -7,7 +7,7 @@ const pull = require('pull-stream')
 const paramap = require('pull-paramap')
 
 // Logic to export a single (possibly chunked) unixfs file.
-module.exports = (node, name, path, pathRest, resolve, dag, parent, depth) => {
+module.exports = (node, name, path, pathRest, resolve, size, dag, parent, depth) => {
   function getData (node) {
     try {
       const file = UnixFS.unmarshal(node.data)
@@ -43,7 +43,7 @@ module.exports = (node, name, path, pathRest, resolve, dag, parent, depth) => {
     name: name,
     path: path,
     hash: node.multihash,
-    size: file.fileSize(),
+    size: size || file.fileSize(),
     type: 'file'
   }])
 }
