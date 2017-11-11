@@ -74,6 +74,7 @@ module.exports = (repo) => {
     })
 
     it('export a small file with links', (done) => {
+      this.timeout(30 * 1000)
       const hash = 'QmW7BDxEbGqxxSYVtn3peNPQgdDXbWkoQ6J1EFYAEuQV3Q'
       pull(
         exporter(hash, ipldResolver),
@@ -83,9 +84,10 @@ module.exports = (repo) => {
           fileEql(files[0], bigFile, done)
         })
       )
-    }).timeout(30 * 1000)
+    })
 
     it('export a small file with links using CID instead of multihash', (done) => {
+      this.timeout(30 * 1000)
       const cid = new CID('QmW7BDxEbGqxxSYVtn3peNPQgdDXbWkoQ6J1EFYAEuQV3Q')
 
       pull(
@@ -96,9 +98,10 @@ module.exports = (repo) => {
           fileEql(files[0], bigFile, done)
         })
       )
-    }).timeout(30 * 1000)
+    })
 
     it('export a large file > 5mb', (done) => {
+      this.timeout(30 * 1000)
       const hash = 'QmRQgufjp9vLE8XK2LGKZSsPCFCF6e4iynCQtNB5X2HBKE'
       pull(
         exporter(hash, ipldResolver),
@@ -109,9 +112,10 @@ module.exports = (repo) => {
           fileEql(files[0], null, done)
         })
       )
-    }).timeout(30 * 1000)
+    })
 
     it('export a directory', (done) => {
+      this.timeout(30 * 1000)
       const hash = 'QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN'
 
       pull(
@@ -149,9 +153,10 @@ module.exports = (repo) => {
           )
         })
       )
-    }).timeout(30 * 1000)
+    })
 
     it('export a directory one deep', (done) => {
+      this.timeout(30 * 1000)
       const hash = 'QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN'
 
       pull(
@@ -185,7 +190,7 @@ module.exports = (repo) => {
           )
         })
       )
-    }).timeout(30 * 1000)
+    })
 
     it('returns an empty stream for dir', (done) => {
       const hash = 'QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn'

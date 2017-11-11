@@ -299,6 +299,7 @@ module.exports = (repo) => {
       })
 
       it('file bigger than a single chunk', (done) => {
+        this.timeout(60 * 1000)
         pull(
           pull.values([{
             path: '1.2MiB.txt',
@@ -311,9 +312,10 @@ module.exports = (repo) => {
             done()
           })
         )
-      }).timeout(60 * 1000)
+      })
 
       it('file bigger than a single chunk inside a dir', (done) => {
+        this.timeout(60 * 1000)
         pull(
           pull.values([{
             path: 'foo-big/1.2MiB.txt',
@@ -331,7 +333,7 @@ module.exports = (repo) => {
             done()
           })
         )
-      }).timeout(60 * 1000)
+      })
 
       it('empty directory', (done) => {
         pull(
