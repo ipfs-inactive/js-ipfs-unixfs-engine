@@ -73,7 +73,7 @@ module.exports = (repo) => {
       )
     })
 
-    it('export a small file with links', (done) => {
+    it('export a small file with links', function (done) {
       this.timeout(30 * 1000)
       const hash = 'QmW7BDxEbGqxxSYVtn3peNPQgdDXbWkoQ6J1EFYAEuQV3Q'
       pull(
@@ -86,7 +86,7 @@ module.exports = (repo) => {
       )
     })
 
-    it('export a small file with links using CID instead of multihash', (done) => {
+    it('export a small file with links using CID instead of multihash', function (done) {
       this.timeout(30 * 1000)
       const cid = new CID('QmW7BDxEbGqxxSYVtn3peNPQgdDXbWkoQ6J1EFYAEuQV3Q')
 
@@ -100,7 +100,7 @@ module.exports = (repo) => {
       )
     })
 
-    it('export a large file > 5mb', (done) => {
+    it('export a large file > 5mb', function (done) {
       this.timeout(30 * 1000)
       const hash = 'QmRQgufjp9vLE8XK2LGKZSsPCFCF6e4iynCQtNB5X2HBKE'
       pull(
@@ -114,7 +114,7 @@ module.exports = (repo) => {
       )
     })
 
-    it('export a directory', (done) => {
+    it('export a directory', function (done) {
       this.timeout(30 * 1000)
       const hash = 'QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN'
 
@@ -155,7 +155,7 @@ module.exports = (repo) => {
       )
     })
 
-    it('export a directory one deep', (done) => {
+    it('export a directory one deep', function (done) {
       this.timeout(30 * 1000)
       const hash = 'QmWChcSFMNcFkfeJtNd8Yru1rE6PhtCRfewi1tMwjkwKjN'
 

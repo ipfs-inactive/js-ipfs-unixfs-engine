@@ -298,7 +298,7 @@ module.exports = (repo) => {
         }
       })
 
-      it('file bigger than a single chunk', (done) => {
+      it('file bigger than a single chunk', function (done) {
         this.timeout(60 * 1000)
         pull(
           pull.values([{
@@ -314,7 +314,7 @@ module.exports = (repo) => {
         )
       })
 
-      it('file bigger than a single chunk inside a dir', (done) => {
+      it('file bigger than a single chunk inside a dir', function (done) {
         this.timeout(60 * 1000)
         pull(
           pull.values([{
