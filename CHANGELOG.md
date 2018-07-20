@@ -1,3 +1,13 @@
+<a name="0.30.2"></a>
+## [0.30.2](https://github.com/ipfs/js-ipfs-unixfs-engine/compare/v0.30.1...v0.30.2) (2018-07-20)
+
+
+### Bug Fixes
+
+* backport cid version fix to 0.30.x ([3b48607](https://github.com/ipfs/js-ipfs-unixfs-engine/commit/3b48607))
+
+
+
 <a name="0.30.1"></a>
 ## [0.30.1](https://github.com/ipfs/js-ipfs-unixfs-engine/compare/v0.30.0...v0.30.1) (2018-07-19)
 
