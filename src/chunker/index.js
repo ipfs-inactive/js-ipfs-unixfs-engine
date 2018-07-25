@@ -1,3 +1,5 @@
+'use strict'
+
 const rabin = require('rabin')
 
 const chunkers = {

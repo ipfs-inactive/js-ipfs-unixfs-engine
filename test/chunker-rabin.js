@@ -27,9 +27,7 @@ describe('chunker: rabin', function () {
       chunker({minChunkSize: 48, avgChunkSize: 96, maxChunkSize: 192}),
       pull.collect((err, chunks) => {
         expect(err).to.not.exist()
-        let totalSize = 0
         chunks.forEach((chunk) => {
-          totalSize += chunk.length
           expect(chunk).to.have.length.gte(48)
           expect(chunk).to.have.length.lte(192)
         })
@@ -42,7 +40,7 @@ describe('chunker: rabin', function () {
     const KiB256 = 262144
     let file = Buffer.concat([rawFile, Buffer.from('hello')])
     const opts = {
-      minChunkSize: KiB256/3, 
+      minChunkSize: KiB256 / 3,
       avgChunkSize: KiB256,
       maxChunkSize: KiB256 + (KiB256 / 2)
     }
@@ -61,5 +59,4 @@ describe('chunker: rabin', function () {
       })
     )
   })
-
 })
