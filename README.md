@@ -70,7 +70,7 @@ pull(
 
 ### Exporting a file
 
-The exporter is a [pull-stream source](https://github.com/pull-stream/pull-stream#through) which takes a [cid](https://npmjs.com/packages/cids) and an [ipld](https://npmjs.com/packages/ipld) resolver.
+The exporter is a [pull-stream source](https://github.com/pull-stream/pull-stream#source-readable-stream-that-produces-values) which takes a [cid](https://npmjs.com/packages/cids) and an [ipld](https://npmjs.com/packages/ipld) resolver.
 
 See the [`unixfs-exporter`](https://npmjs.com/packages/ipfs-unixfs-exporter) module for full documentation.
 
