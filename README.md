@@ -49,12 +49,13 @@ const {
   importer
 } = require('ipfs-unixfs-engine')
 const pull = require('pull-stream')
+const fs = require('fs')
 
-// Import path /tmp/foo/bar
+// Import path /tmp/bar.txt
 pull(
   pull.values([{
-    path: '/tmp/foo/bar',
-    content: fs.createReadStream(file)
+    path: '/tmp/bar.txt',
+    content: fs.createReadStream('/tmp/bar.txt')
   }]),
 
   // You need to create and pass an ipld resolver instance
@@ -64,6 +65,19 @@ pull(
   // Handle the error and do something with the results
   pull.collect((err, files) => {
     console.info(files)
+
+    // Prints:
+    // [{
+    //   size: 12,
+    //   leafSize: 4,
+    //   multihash: <Buffer>
+    //   path: '/tmp/bar.txt',
+    //   name: ''
+    // }, {
+    //   path: 'tmp',
+    //   multihash: <Buffer>
+    //   size: 65
+    // }]
   })
 )
 ```
