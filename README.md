@@ -1,5 +1,4 @@
-IPFS unixFS Engine
-==================
+# ipfs-unixfs-engine
 
 [![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)
 [![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)
@@ -22,12 +21,8 @@ IPFS unixFS Engine
 
 - [Install](#install)
 - [Usage](#usage)
-  - [Example Importer](#example-importer)
-  - [Importer API](#importer-api)
-    - [const add = new Importer(dag)](#const-add--new-importerdag)
-  - [Example Exporter](#example-exporter)
-  - [Exporter: API](#exporter-api)
-  - [new Exporter(hash, dagService)](#new-exporterhash-dagservice)
+  - [Importing a file](#importing-a-file)
+  - [Exporting a file](#exporting-a-file)
 - [Contribute](#contribute)
 - [License](#license)
 
@@ -39,194 +34,62 @@ IPFS unixFS Engine
 
 ## Usage
 
-### Importer
+The `unixfs-engine` exports the [`unixfs-importer`](https://npmjs.com/packages/ipfs-unixfs-importer) and [`unixfs-exporter`](https://npmjs.com/packages/ipfs-unixfs-exporter) modules.  Please see those modules for for full documentation.
 
-#### Importer example
+### Importing a file
 
-Let's create a little directory to import:
+The importer is a [pull-stream through](https://github.com/pull-stream/pull-stream#through) which takes objects of the form `{ path, content }` where `path` is a string path and `content` can be a `Buffer`, a `ReadableStream` or a `pull-stream` that emits `Buffer`s.
 
-```sh
-> cd /tmp
-> mkdir foo
-> echo 'hello' > foo/bar
-> echo 'world' > foo/quux
-```
+It requires an [ipld](https://npmjs.com/packages/ipld) resolver to persist [DAGNodes](https://npmjs.com/packages/ipld-dag-pb) and make them available over IPFS.
 
-And write the importing logic:
+See the [`unixfs-importer`](https://npmjs.com/packages/ipfs-unixfs-importer) module for full documentation.
 
 ```js
-const Importer = require('ipfs-unixfs-engine').Importer
-
-// You need to create and pass an ipld-resolve instance
-// https://github.com/ipld/js-ipld-resolver
-const filesAddStream = new Importer(<ipld-resolver instance>)
-
-// An array to hold the return of nested file/dir info from the importer
-// A root DAG Node is received upon completion
-
-const res = []
+const {
+  importer
+} = require('ipfs-unixfs-engine')
+const pull = require('pull-stream')
 
 // Import path /tmp/foo/bar
-const rs = fs.createReadStream(file)
-const rs2 = fs.createReadStream(file2)
-const input = { path: '/tmp/foo/bar', content: rs }
-const input2 = { path: '/tmp/foo/quxx', content: rs2 }
+pull(
+  pull.values([{
+    path: '/tmp/foo/bar',
+    content: fs.createReadStream(file)
+  }]),
 
-// Listen for the data event from the importer stream
-filesAddStream.on('data', (info) => res.push(info))
+  // You need to create and pass an ipld resolver instance
+  // https://npmjs.com/packages/ipld
+  importer(<ipld-resolver instance>, <options>),
 
-// The end event of the stream signals that the importer is done
-filesAddStream.on('end', () => console.log('Finished filesAddStreaming files!'))
-
-// Calling write on the importer to filesAddStream the file/object tuples
-filesAddStream.write(input)
-filesAddStream.write(input2)
-filesAddStream.end()
+  // Handle the error and do something with the results
+  pull.collect((err, files) => {
+    console.info(files)
+  })
+)
 ```
 
-When run, the stat of DAG Node is outputted for each file on data event until the root:
+### Exporting a file
+
+The exporter is a [pull-stream source](https://github.com/pull-stream/pull-stream#through) which takes a [cid](https://npmjs.com/packages/cids) and an [ipld](https://npmjs.com/packages/ipld) resolver.
+
+See the [`unixfs-exporter`](https://npmjs.com/packages/ipfs-unixfs-exporter) module for full documentation.
 
 ```js
-{ multihash: <Buffer 12 20 bd e2 2b 57 3f 6f bd 7c cc 5a 11 7f 28 6c a2 9a 9f c0 90 e1 d4 16 d0 5f 42 81 ec 0c 2a 7f 7f 93>,
-  size: 39243,
-  path: '/tmp/foo/bar' }
-
-{ multihash: <Buffer 12 20 bd e2 2b 57 3f 6f bd 7c cc 5a 11 7f 28 6c a2 9a 9f c0 90 e1 d4 16 d0 5f 42 81 ec 0c 2a 7f 7f 93>,
-  size: 59843,
-  path: '/tmp/foo/quxx' }
-
-{ multihash: <Buffer 12 20 bd e2 2b 57 3f 6f bd 7c cc 5a 11 7f 28 6c a2 9a 9f c0 90 e1 d4 16 d0 5f 42 81 ec 0c 2a 7f 7f 93>,
-  size: 93242,
-  path: '/tmp/foo' }
-
-{ multihash: <Buffer 12 20 bd e2 2b 57 3f 6f bd 7c cc 5a 11 7f 28 6c a2 9a 9f c0 90 e1 d4 16 d0 5f 42 81 ec 0c 2a 7f 7f 93>,
-  size: 94234,
-  path: '/tmp' }
-
-```
-
-#### Importer API
-
-```js
-const Importer = require('ipfs-unixfs-engine').Importer
-```
-
-#### const import = new Importer(dag [, options])
-
-The `import` object is a duplex pull stream that takes objects of the form:
-
-```js
-{
-  path: 'a name',
-  content: (Buffer or Readable stream)
-}
-```
-
-`import` will output file info objects as files get stored in IPFS. When stats on a node are emitted they are guaranteed to have been written.
-
-`dag` is an instance of the [`IPLD Resolver`](https://github.com/ipld/js-ipld-resolver) or the [`js-ipfs` `dag api`](https://github.com/ipfs/interface-ipfs-core/blob/master/SPEC/DAG.md)
-
-The input's file paths and directory structure will be preserved in the [`dag-pb`](https://github.com/ipld/js-ipld-dag-pb) created nodes.
-
-`options` is an JavaScript option that might include the following keys:
-
-- `wrap` (boolean, defaults to false): if true, a wrapping node will be created
-- `shardSplitThreshold` (positive integer, defaults to 1000): the number of directory entries above which we decide to use a sharding directory builder (instead of the default flat one)
-- `chunker` (string, defaults to `"fixed"`): the chunking strategy. Now only supports `"fixed"`
-- `chunkerOptions` (object, optional): the options for the chunker. Defaults to an object with the following properties:
-  - `maxChunkSize` (positive integer, defaults to `262144`): the maximum chunk size for the `fixed` chunker.
-- `strategy` (string, defaults to `"balanced"`): the DAG builder strategy name. Supports:
-  - `flat`: flat list of chunks
-  - `balanced`: builds a balanced tree
-  - `trickle`: builds [a trickle tree](https://github.com/ipfs/specs/pull/57#issuecomment-265205384)
-- `maxChildrenPerNode` (positive integer, defaults to `174`): the maximum children per node for the `balanced` and `trickle` DAG builder strategies
-- `layerRepeat` (positive integer, defaults to 4): (only applicable to the `trickle` DAG builder strategy). The maximum repetition of parent nodes for each layer of the tree.
-- `reduceSingleLeafToSelf` (boolean, defaults to `true`): optimization for, when reducing a set of nodes with one node, reduce it to that node.
-- `dirBuilder` (object): the options for the directory builder
-  - `hamt` (object): the options for the HAMT sharded directory builder
-    - bits (positive integer, defaults to `8`): the number of bits at each bucket of the HAMT
-- `progress` (function): a function that will be called with the byte length of chunks as a file is added to ipfs.
-- `onlyHash` (boolean, defaults to false): Only chunk and hash - do not write to disk
-- `hashAlg` (string): multihash hashing algorithm to use
-- `cidVersion` (integer, default 0): the CID version to use when storing the data (storage keys are based on the CID, _including_ it's version)
-- `rawLeaves` (boolean, defaults to false): When a file would span multiple DAGNodes, if this is true the leaf nodes will not be wrapped in `UnixFS` protobufs and will instead contain the raw file bytes
-- `leafType` (string, defaults to `'file'`) what type of UnixFS node leaves should be - can be `'file'` or `'raw'` (ignored when `rawLeaves` is `true`)
-
-### Exporter
-
-#### Exporter example
-
-```js
-// Create an export source pull-stream cid or ipfs path you want to export and a
-// <dag or ipld-resolver instance> to fetch the file from
-const filesStream = Exporter(<cid or ipfsPath>, <dag or ipld-resolver instance>)
-
-// Pipe the return stream to console
-filesStream.on('data', (file) => file.content.pipe(process.stdout))
-```
-
-#### Exporter API
-
-```js
-const Exporter = require('ipfs-unixfs-engine').Exporter
-```
-
-### new Exporter(<cid or ipfsPath>, <dag or ipld-resolver>, <options>)
-
-Uses the given [dag API][] or an [ipld-resolver instance][] to fetch an IPFS [UnixFS][] object(s) by their multiaddress.
-
-Creates a new readable stream in object mode that outputs objects of the form
-
-```js
-{
-  path: 'a name',
-  content: (Buffer or Readable stream)
-}
-```
-
-#### `offset` and `length`
-
-`offset` and `length` arguments can optionally be passed to the reader function.  These will cause the returned stream to only emit bytes starting at `offset` and with length of `length`.
-
-See [the tests](test/reader.js) for examples of using these arguments.
-
-```js
-const exporter = require('ipfs-unixfs-engine').exporter
+const {
+  exporter
+} = require('ipfs-unixfs-engine').exporter
 const pull = require('pull-stream')
 const drain = require('pull-stream/sinks/drain')
 
 pull(
-  exporter(cid, ipldResolver, {
-    offset: 0,
-    length: 10
-  })
+  // You need to create and pass an ipld resolver instance
+  // https://npmjs.com/packages/ipld
+  exporter(cid, ipld),
   drain((file) => {
-    // file.content is a pull stream containing only the first 10 bytes of the file
+    // file.content is a pull stream containing the bytes of the file
   })
 )
 ```
-
-#### Errors
-
-Errors are received by [pull-stream][] sinks.
-
-```js
-const exporter = require('ipfs-unixfs-engine').exporter
-const pull = require('pull-stream')
-const collect = require('pull-stream/sinks/collect')
-
-pull(
-  exporter(cid, ipldResolver)
-  collect((error, chunks) => {
-    // handle the error
-  })
-)
-```
-
-[dag API]: https://github.com/ipfs/interface-ipfs-core/blob/master/SPEC/DAG.md
-[ipld-resolver instance]: https://github.com/ipld/js-ipld-resolver
-[UnixFS]: https://github.com/ipfs/specs/tree/master/unixfs
-[pull-stream]: https://www.npmjs.com/package/pull-stream
 
 ## Contribute
 

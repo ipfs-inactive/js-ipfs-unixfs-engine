@@ -1,4 +1,4 @@
 'use strict'
 
-exports.importer = exports.Importer = require('./importer')
-exports.exporter = exports.Exporter = require('./exporter')
+exports.importer = exports.Importer = require('ipfs-unixfs-importer')
+exports.exporter = exports.Exporter = require('ipfs-unixfs-exporter')
