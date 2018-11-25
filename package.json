@@ -42,11 +42,8 @@
     "dirty-chai": "^2.0.1"
   },
   "dependencies": {
-    "ipfs-unixfs-exporter": "~0.34.0",
-    "ipfs-unixfs-importer": "~0.34.0"
-  },
-  "optionalDependencies": {
-    "rabin": "^1.6.0"
+    "ipfs-unixfs-exporter": "~0.35.0",
+    "ipfs-unixfs-importer": "~0.36.0"
   },
   "contributors": [
     "Alan Shaw <alan@tableflip.io>",
