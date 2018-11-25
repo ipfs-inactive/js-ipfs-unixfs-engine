@@ -1,3 +1,8 @@
+<a name="0.35.0"></a>
+# [0.35.0](https://github.com/ipfs/js-ipfs-unixfs-engine/compare/v0.34.0...v0.35.0) (2018-11-25)
+
+
+
 <a name="0.34.0"></a>
 # [0.34.0](https://github.com/ipfs/js-ipfs-unixfs-engine/compare/v0.33.0...v0.34.0) (2018-11-12)
 
