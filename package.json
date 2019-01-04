@@ -37,13 +37,13 @@
   },
   "homepage": "https://github.com/ipfs/js-ipfs-unixfs-engine#readme",
   "devDependencies": {
-    "aegir": "^17.0.0",
+    "aegir": "^18.0.2",
     "chai": "^4.2.0",
     "dirty-chai": "^2.0.1"
   },
   "dependencies": {
     "ipfs-unixfs-exporter": "~0.35.4",
-    "ipfs-unixfs-importer": "~0.37.1"
+    "ipfs-unixfs-importer": "~0.38.0"
   },
   "contributors": [
     "Alan Shaw <alan@tableflip.io>",
