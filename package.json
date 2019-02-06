@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "ipfs-unixfs-exporter": "~0.35.4",
-    "ipfs-unixfs-importer": "~0.38.0"
+    "ipfs-unixfs-importer": "github:ipfs/js-ipfs-unixfs-importer#refactor/cidv1b32-default"
   },
   "contributors": [
     "Alan Shaw <alan@tableflip.io>",
