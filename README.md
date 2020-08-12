@@ -1,3 +1,7 @@
+# [ARCHIVED]
+
+> This module has been merged into [ipfs/js-ipfs-unixfs](https://github.com/ipfs/js-ipfs-unixfs) where development continues. Please open issues/PRs there.
+
 # ipfs-unixfs-engine
 
 [![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)
